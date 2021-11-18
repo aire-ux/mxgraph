@@ -22,7 +22,7 @@ var mxClient =
 	 * 
 	 * Current version is 4.2.2.
 	 */
-	VERSION: '4.2.2',
+	VERSION: '4.2.3',
 
 	/**
 	 * Variable: IS_IE

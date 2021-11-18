@@ -4,19 +4,27 @@ var path = require("path"),
     deps;
 
 module.exports = function (grunt) {
-    // To get the dependencies for the project, read the filenames by matching
-    // mxClient.include([...]) in mxClient.js. This is not perfect, but the list is
-    // required in mxClient.js for compatibility.
-    mxClientContent = fs.readFileSync(
-        path.join(process.cwd(), "./javascript/src/js/mxClient.js"),
-        "utf8"
-    );
-    deps = mxClientContent.match(/mxClient\.include\([^"']+["'](.*?)["']/gi).map(function (str) {
+  // To get the dependencies for the project, read the filenames by matching
+  // mxClient.include([...]) in mxClient.js. This is not perfect, but the list is
+  // required in mxClient.js for compatibility.
+  mxClientContent = fs.readFileSync(
+      path.join(process.cwd(), "./javascript/src/js/mxClient.js"),
+      "utf8"
+  );
+  deps = mxClientContent.match(/mxClient\.include\([^"']+["'](.*?)["']/gi).map(
+      function (str) {
         return "." + str.match(/mxClient\.include\([^"']+["'](.*?)["']/)[1];
-    });
-    deps = ["./js/mxClient.js"].concat(deps.slice(0));
+      });
+  deps = ["./js/mxClient.js"].concat(deps.slice(0));
 
   grunt.initConfig({
+    uglify: {
+      main: {
+        files: {
+          'javascript/mxClient.min.js': ['javascript/dist/build.js']
+        }
+      }
+    },
     copy: {
       main: {
         files: [{
@@ -33,7 +41,8 @@ module.exports = function (grunt) {
                 moduleName = path.basename(srcpath, ".js");
 
             afterContent += "\n__mxOutput." + path.basename(srcpath, ".js") +
-              " = typeof " + moduleName + " !== 'undefined' ? " + moduleName + " : undefined;\n";
+                " = typeof " + moduleName + " !== 'undefined' ? " + moduleName
+                + " : undefined;\n";
 
             return content + afterContent;
           }
@@ -49,30 +58,31 @@ module.exports = function (grunt) {
       },
       options: {
         banner: "(function (root, factory) {\n" +
-          "if (typeof define === 'function' && define.amd) {\n" +
-          "define([], factory);\n" +
-          "} else if (typeof module === 'object' && module.exports) {\n" +
-          "module.exports = factory();\n" +
-          "} else {\n" +
-          "root.mxgraph = factory();\n" +
-          "}\n" +
-          "}(this, function () {\n" +
-          "return function (opts) {\n" +
-          // Opts will be passed into this function, expand them out as if
-          // they were globals so they can get picked up by the logic in
-          // mxClient.js.
-          "for (var name in opts) { this[name] = opts[name]; }\n" +
-          "var __mxOutput = {};\n",
+            "if (typeof define === 'function' && define.amd) {\n" +
+            "define([], factory);\n" +
+            "} else if (typeof module === 'object' && module.exports) {\n" +
+            "module.exports = factory();\n" +
+            "} else {\n" +
+            "root.mxgraph = factory();\n" +
+            "}\n" +
+            "}(this, function () {\n" +
+            "return function (opts) {\n" +
+            // Opts will be passed into this function, expand them out as if
+            // they were globals so they can get picked up by the logic in
+            // mxClient.js.
+            "for (var name in opts) { this[name] = opts[name]; }\n" +
+            "var __mxOutput = {};\n",
         footer: "return __mxOutput;\n" +
-          "};\n" +
-          "}));"
+            "};\n" +
+            "}));"
       }
     },
     webpack: {
       examples: {
         entry: "./javascript/examples/webpack/src/anchors.js",
         output: {
-            path: path.resolve(process.cwd(), "./javascript/examples/webpack/dist"),
+          path: path.resolve(process.cwd(),
+              "./javascript/examples/webpack/dist"),
           filename: "anchors.js"
         }
       }
@@ -89,10 +99,12 @@ module.exports = function (grunt) {
   });
 
   require("load-grunt-tasks")(grunt);
+  // grunt.registerTask('uglify', ['copy']);
   grunt.registerTask("default", [
     "copy",
     "concat",
-    "webpack"
+    "webpack",
+    "uglify:main"
   ]);
   grunt.registerTask("build", [
     "default"

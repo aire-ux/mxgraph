@@ -65,12 +65,12 @@ module.exports = function (grunt) {
             "} else {\n" +
             "root.mxgraph = factory();\n" +
             "}\n" +
-            "}(this, function () {\n" +
+            "}(this||window, function () {\n" +
             "return function (opts) {\n" +
             // Opts will be passed into this function, expand them out as if
             // they were globals so they can get picked up by the logic in
             // mxClient.js.
-            "for (var name in opts) { this[name] = opts[name]; }\n" +
+            "for (var name in opts) { (this||window)[name] = opts[name]; }\n" +
             "var __mxOutput = {};\n",
         footer: "return __mxOutput;\n" +
             "};\n" +

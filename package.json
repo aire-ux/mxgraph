@@ -1,19 +1,19 @@
 {
-  "name": "mxgraph",
+  "name": "@aire-ux/mxgraph",
   "description": "mxGraph is a fully client side JavaScript diagramming library that uses SVG and HTML for rendering.",
-  "version": "4.2.2",
-  "homepage": "https://github.com/jgraph/mxgraph",
+  "version": "4.2.5",
+  "homepage": "https://github.com/aire-ux/mxgraph",
   "author": {
-    "name": "JGraph Ltd",
-    "email": "support@jgraph.com"
+    "name": "Sunshower.io",
+    "email": "josiah@sunshower.io"
   },
   "license": "Apache-2.0",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/jgraph/mxgraph.git"
+    "url": "git+https://github.com/aire-ux/mxgraph.git"
   },
   "bugs": {
-    "url": "https://github.com/jgraph/mxgraph/issues"
+    "url": "https://github.com/aire-ux/mxgraph/issues"
   },
   "main": "./javascript/dist/build.js",
   "scripts": {
@@ -23,6 +23,7 @@
     "grunt": "^1.0.1",
     "grunt-contrib-concat": "^1.0.1",
     "grunt-contrib-copy": "^1.0.0",
+    "grunt-contrib-uglify": "^5.0.1",
     "grunt-webpack": "^2.0.1",
     "load-grunt-tasks": "^3.5.2",
     "webpack": "^2.2.1"

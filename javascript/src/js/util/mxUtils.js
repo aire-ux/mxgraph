@@ -6,31 +6,31 @@ var mxUtils =
 {
 	/**
 	 * Class: mxUtils
-	 * 
+	 *
 	 * A singleton class that provides cross-browser helper methods.
 	 * This is a global functionality. To access the functions in this
 	 * class, use the global classname appended by the functionname.
 	 * You may have to load chrome://global/content/contentAreaUtils.js
 	 * to disable certain security restrictions in Mozilla for the <open>,
 	 * <save>, <saveAs> and <copy> function.
-	 * 
+	 *
 	 * For example, the following code displays an error message:
-	 * 
+	 *
 	 * (code)
 	 * mxUtils.error('Browser is not supported!', 200, false);
 	 * (end)
-	 * 
+	 *
 	 * Variable: errorResource
-	 * 
+	 *
 	 * Specifies the resource key for the title of the error window. If the
 	 * resource for this key does not exist then the value is used as
 	 * the title. Default is 'error'.
 	 */
 	errorResource: (mxClient.language != 'none') ? 'error' : '',
-	
+
 	/**
 	 * Variable: closeResource
-	 * 
+	 *
 	 * Specifies the resource key for the label of the close button. If the
 	 * resource for this key does not exist then the value is used as
 	 * the label. Default is 'close'.
@@ -39,19 +39,19 @@ var mxUtils =
 
 	/**
 	 * Variable: errorImage
-	 * 
+	 *
 	 * Defines the image used for error dialogs.
 	 */
 	errorImage: mxClient.imageBasePath + '/error.gif',
-	
+
 	/**
 	 * Function: removeCursors
-	 * 
+	 *
 	 * Removes the cursors from the style of the given DOM node and its
 	 * descendants.
-	 * 
+	 *
 	 * Parameters:
-	 * 
+	 *
 	 * element - DOM node to remove the cursor style from.
 	 */
 	removeCursors: function(element)
@@ -60,13 +60,13 @@ var mxUtils =
 		{
 			element.style.cursor = '';
 		}
-		
+
 		var children = element.childNodes;
-		
+
 		if (children != null)
 		{
 	        var childCount = children.length;
-	        
+
 	        for (var i = 0; i < childCount; i += 1)
 	        {
 	            mxUtils.removeCursors(children[i]);
@@ -76,11 +76,11 @@ var mxUtils =
 
 	/**
 	 * Function: getCurrentStyle
-	 * 
+	 *
 	 * Returns the current style of the specified element.
-	 * 
+	 *
 	 * Parameters:
-	 * 
+	 *
 	 * element - DOM node whose current style should be returned.
 	 */
 	getCurrentStyle: function()
@@ -96,16 +96,21 @@ var mxUtils =
 		{
 			return function(element)
 			{
-				return (element != null) ?
-					window.getComputedStyle(element, '') :
-					null;
+				if (!element || element.toString() === '[object ShadowRoot]') {
+					return null;
+				} else {
+					return window.getComputedStyle(element, '');
+				}
+				// return (element != null) ?
+				// 	window.getComputedStyle(element, '') :
+				// 	null;
 			};
 		}
 	}(),
-	
+
 	/**
 	 * Function: parseCssNumber
-	 * 
+	 *
 	 * Parses the given CSS numeric value adding handling for the values thin,
 	 * medium and thick (2, 4 and 6).
 	 */
@@ -123,23 +128,23 @@ var mxUtils =
 		{
 			value = '6';
 		}
-		
+
 		value = parseFloat(value);
-		
+
 		if (isNaN(value))
 		{
 			value = 0;
 		}
-		
+
 		return value;
 	},
 
 	/**
 	 * Function: setPrefixedStyle
-	 * 
+	 *
 	 * Adds the given style with the standard name and an optional vendor prefix for the current
 	 * browser.
-	 * 
+	 *
 	 * (code)
 	 * mxUtils.setPrefixedStyle(node.style, 'transformOrigin', '0% 0%');
 	 * (end)
@@ -147,7 +152,7 @@ var mxUtils =
 	setPrefixedStyle: function()
 	{
 		var prefix = null;
-		
+
 		if (mxClient.IS_OT)
 		{
 			prefix = 'O';
@@ -168,7 +173,7 @@ var mxUtils =
 		return function(style, name, value)
 		{
 			style[name] = value;
-			
+
 			if (prefix != null && name.length > 0)
 			{
 				name = prefix + name.substring(0, 1).toUpperCase() + name.substring(1);
@@ -176,15 +181,15 @@ var mxUtils =
 			}
 		};
 	}(),
-	
+
 	/**
 	 * Function: hasScrollbars
-	 * 
+	 *
 	 * Returns true if the overflow CSS property of the given node is either
 	 * scroll or auto.
-	 * 
+	 *
 	 * Parameters:
-	 * 
+	 *
 	 * node - DOM node whose style should be checked for scrollbars.
 	 */
 	hasScrollbars: function(node)
@@ -193,10 +198,10 @@ var mxUtils =
 
 		return style != null && (style.overflow == 'scroll' || style.overflow == 'auto');
 	},
-	
+
 	/**
 	 * Function: bind
-	 * 
+	 *
 	 * Returns a wrapper function that locks the execution scope of the given
 	 * function to the specified scope. Inside funct, the "this" keyword
 	 * becomes a reference to that scope.
@@ -208,17 +213,17 @@ var mxUtils =
 			return funct.apply(scope, arguments);
 		};
 	},
-	
+
 	/**
 	 * Function: eval
-	 * 
+	 *
 	 * Evaluates the given expression using eval and returns the JavaScript
 	 * object that represents the expression result. Supports evaluation of
 	 * expressions that define functions and returns the function object for
 	 * these expressions.
-	 * 
+	 *
 	 * Parameters:
-	 * 
+	 *
 	 * expr - A string that represents a JavaScript expression.
 	 */
 	eval: function(expr)
@@ -250,13 +255,13 @@ var mxUtils =
 				mxLog.warn(e.message + ' while evaluating ' + expr);
 			}
 		}
-		
+
 		return result;
 	},
-	
+
 	/**
 	 * Function: findNode
-	 * 
+	 *
 	 * Returns the first node where attr equals value.
 	 * This implementation does not use XPath.
 	 */
@@ -265,37 +270,37 @@ var mxUtils =
 		if (node.nodeType == mxConstants.NODETYPE_ELEMENT)
 		{
 			var tmp = node.getAttribute(attr);
-	
+
 			if (tmp != null && tmp == value)
 			{
 				return node;
 			}
 		}
-		
+
 		node = node.firstChild;
-		
+
 		while (node != null)
 		{
 			var result = mxUtils.findNode(node, attr, value);
-			
+
 			if (result != null)
 			{
 				return result;
 			}
-			
+
 			node = node.nextSibling;
 		}
-		
+
 		return null;
 	},
 
 	/**
 	 * Function: getFunctionName
-	 * 
+	 *
 	 * Returns the name for the given function.
-	 * 
+	 *
 	 * Parameters:
-	 * 
+	 *
 	 * f - JavaScript object that represents a function.
 	 */
 	getFunctionName: function(f)
@@ -311,12 +316,12 @@ var mxUtils =
 			else
 			{
 				str = mxUtils.trim(f.toString());
-				
+
 				if (/^function\s/.test(str))
 				{
 					str = mxUtils.ltrim(str.substring(9));
 					var idx2 = str.indexOf('(');
-					
+
 					if (idx2 > 0)
 					{
 						str = str.substring(0, idx2);
@@ -324,18 +329,18 @@ var mxUtils =
 				}
 			}
 		}
-		
+
 		return str;
 	},
 
 	/**
 	 * Function: indexOf
-	 * 
+	 *
 	 * Returns the index of obj in array or -1 if the array does not contain
 	 * the given object.
-	 * 
+	 *
 	 * Parameters:
-	 * 
+	 *
 	 * array - Array to check for the given obj.
 	 * obj - Object to find in the given array.
 	 */
@@ -351,18 +356,18 @@ var mxUtils =
 				}
 			}
 		}
-		
+
 		return -1;
 	},
 
 	/**
 	 * Function: forEach
-	 * 
+	 *
 	 * Calls the given function for each element of the given array and returns
 	 * the array.
-	 * 
+	 *
 	 * Parameters:
-	 * 
+	 *
 	 * array - Array that contains the elements.
 	 * fn - Function to be called for each object.
 	 */
@@ -375,35 +380,35 @@ var mxUtils =
 				fn(array[i]);
 			}
 		}
-		
+
 		return array;
 	},
 
 	/**
 	 * Function: remove
-	 * 
+	 *
 	 * Removes all occurrences of the given object in the given array or
 	 * object. If there are multiple occurrences of the object, be they
 	 * associative or as an array entry, all occurrences are removed from
 	 * the array or deleted from the object. By removing the object from
 	 * the array, all elements following the removed element are shifted
 	 * by one step towards the beginning of the array.
-	 * 
+	 *
 	 * The length of arrays is not modified inside this function.
-	 * 
+	 *
 	 * Parameters:
-	 * 
+	 *
 	 * obj - Object to find in the given array.
 	 * array - Array to check for the given obj.
 	 */
 	remove: function(obj, array)
 	{
 		var result = null;
-		
+
 		if (typeof(array) == 'object')
 		{
 			var index = mxUtils.indexOf(array, obj);
-			
+
 			while (index >= 0)
 			{
 				array.splice(index, 1);
@@ -420,22 +425,22 @@ var mxUtils =
 				result = obj;
 			}
 		}
-		
+
 		return result;
 	},
-	
+
 	/**
 	 * Function: isNode
-	 * 
+	 *
 	 * Returns true if the given value is an XML node with the node name
 	 * and if the optional attribute has the specified value.
-	 * 
+	 *
 	 * This implementation assumes that the given value is a DOM node if the
 	 * nodeType property is numeric, that is, if isNaN returns false for
 	 * value.nodeType.
-	 * 
+	 *
 	 * Parameters:
-	 * 
+	 *
 	 * value - Object that should be examined as a node.
 	 * nodeName - String that specifies the node name.
 	 * attributeName - Optional attribute name to check.
@@ -449,26 +454,26 @@ var mxUtils =
  			return attributeName == null ||
  				value.getAttribute(attributeName) == attributeValue;
  		}
-	 	
+
 	 	return false;
 	 },
-	
+
 	/**
 	 * Function: isAncestorNode
-	 * 
+	 *
 	 * Returns true if the given ancestor is an ancestor of the
 	 * given DOM node in the DOM. This also returns true if the
 	 * child is the ancestor.
-	 * 
+	 *
 	 * Parameters:
-	 * 
+	 *
 	 * ancestor - DOM node that represents the ancestor.
 	 * child - DOM node that represents the child.
 	 */
 	 isAncestorNode: function(ancestor, child)
 	 {
 	 	var parent = child;
-	 	
+
 	 	while (parent != null)
 	 	{
 	 		if (parent == ancestor)
@@ -478,17 +483,17 @@ var mxUtils =
 
 	 		parent = parent.parentNode;
 	 	}
-	 	
+
 	 	return false;
 	 },
 
 	/**
 	 * Function: getChildNodes
-	 * 
+	 *
 	 * Returns an array of child nodes that are of the given node type.
-	 * 
+	 *
 	 * Parameters:
-	 * 
+	 *
 	 * node - Parent DOM node to return the children from.
 	 * nodeType - Optional node type to return. Default is
 	 * <mxConstants.NODETYPE_ELEMENT>.
@@ -496,32 +501,32 @@ var mxUtils =
 	getChildNodes: function(node, nodeType)
 	{
 		nodeType = nodeType || mxConstants.NODETYPE_ELEMENT;
-		
+
 		var children = [];
 		var tmp = node.firstChild;
-		
+
 		while (tmp != null)
 		{
 			if (tmp.nodeType == nodeType)
 			{
 				children.push(tmp);
 			}
-			
+
 			tmp = tmp.nextSibling;
 		}
-		
+
 		return children;
 	},
 
 	/**
 	 * Function: importNode
-	 * 
+	 *
 	 * Cross browser implementation for document.importNode. Uses document.importNode
 	 * in all browsers but IE, where the node is cloned by creating a new node and
 	 * copying all attributes and children into it using importNode, recursively.
-	 * 
+	 *
 	 * Parameters:
-	 * 
+	 *
 	 * doc - Document to import the node into.
 	 * node - Node to be imported.
 	 * allChildren - If all children should be imported.
@@ -540,11 +545,11 @@ var mxUtils =
 
 	/**
 	 * Function: importNodeImplementation
-	 * 
+	 *
 	 * Full DOM API implementation for importNode without using importNode API call.
-	 * 
+	 *
 	 * Parameters:
-	 * 
+	 *
 	 * doc - Document to import the node into.
 	 * node - Node to be imported.
 	 * allChildren - If all children should be imported.
@@ -556,16 +561,16 @@ var mxUtils =
 			case 1: /* element */
 			{
 				var newNode = doc.createElement(node.nodeName);
-				
+
 				if (node.attributes && node.attributes.length > 0)
 				{
 					for (var i = 0; i < node.attributes.length; i++)
 					{
 						newNode.setAttribute(node.attributes[i].nodeName,
 							node.getAttribute(node.attributes[i].nodeName));
-					}	
+					}
 				}
-				
+
 				if (allChildren && node.childNodes && node.childNodes.length > 0)
 				{
 					for (var i = 0; i < node.childNodes.length; i++)
@@ -573,7 +578,7 @@ var mxUtils =
 						newNode.appendChild(mxUtils.importNodeImplementation(doc, node.childNodes[i], allChildren));
 					}
 				}
-				
+
 				return newNode;
 				break;
 			}
@@ -589,13 +594,13 @@ var mxUtils =
 
 	/**
 	 * Function: createXmlDocument
-	 * 
+	 *
 	 * Returns a new, empty XML document.
 	 */
 	createXmlDocument: function()
 	{
 		var doc = null;
-		
+
 		if (document.implementation && document.implementation.createDocument)
 		{
 			doc = document.implementation.createDocument('', '', null);
@@ -604,13 +609,13 @@ var mxUtils =
 		{
 			doc = mxUtils.createMsXmlDocument();
 	 	}
-	 	
+
 	 	return doc;
 	},
 
 	/**
 	 * Function: createMsXmlDocument
-	 * 
+	 *
 	 * Returns a new, empty Microsoft.XMLDOM document using ActiveXObject.
 	 */
 	createMsXmlDocument: function()
@@ -621,18 +626,18 @@ var mxUtils =
 		// Workaround for parsing errors with SVG DTD
 		doc.validateOnParse = false;
 		doc.resolveExternals = false;
-	 	
+
 	 	return doc;
 	},
 
 	/**
 	 * Function: parseXml
-	 * 
+	 *
 	 * Parses the specified XML string into a new XML document and returns the
 	 * new document.
-	 * 
+	 *
 	 * Example:
-	 * 
+	 *
 	 * (code)
 	 * var doc = mxUtils.parseXml(
 	 *   '<mxGraphModel><root><MyDiagram id="0"><mxCell/></MyDiagram>'+
@@ -641,9 +646,9 @@ var mxUtils =
 	 *   '<mxGeometry x="10" y="10" width="80" height="30" as="geometry"/>'+
 	 *   '</mxCell></MyObject></root></mxGraphModel>');
 	 * (end)
-	 * 
+	 *
 	 * Parameters:
-	 * 
+	 *
 	 * xml - String that contains the XML data.
 	 */
 	parseXml: function()
@@ -653,7 +658,7 @@ var mxUtils =
 			return function(xml)
 			{
 				var parser = new DOMParser();
-				
+
 				return parser.parseFromString(xml, 'text/xml');
 			};
 		}
@@ -663,7 +668,7 @@ var mxUtils =
 			{
 				var doc = mxUtils.createMsXmlDocument();
 				doc.loadXML(xml);
-				
+
 				return doc;
 			};
 		}
@@ -671,7 +676,7 @@ var mxUtils =
 
 	/**
 	 * Function: clearSelection
-	 * 
+	 *
 	 * Clears the current selection in the page.
 	 */
 	clearSelection: function()
@@ -705,48 +710,48 @@ var mxUtils =
 
 	/**
 	 * Function: removeWhitespace
-	 * 
+	 *
 	 * Removes the sibling text nodes for the given node that only consists
 	 * of tabs, newlines and spaces.
-	 * 
+	 *
 	 * Parameters:
-	 * 
+	 *
 	 * node - DOM node whose siblings should be removed.
 	 * before - Optional boolean that specifies the direction of the traversal.
 	 */
 	removeWhitespace: function(node, before)
 	{
 		var tmp = (before) ? node.previousSibling : node.nextSibling;
-		
+
 		while (tmp != null && tmp.nodeType == mxConstants.NODETYPE_TEXT)
 		{
 			var next = (before) ? tmp.previousSibling : tmp.nextSibling;
 			var text = mxUtils.getTextContent(tmp);
-			
+
 			if (mxUtils.trim(text).length == 0)
 			{
 				tmp.parentNode.removeChild(tmp);
 			}
-			
+
 			tmp = next;
 		}
 	},
-	
+
 	/**
 	 * Function: htmlEntities
-	 * 
+	 *
 	 * Replaces characters (less than, greater than, newlines and quotes) with
 	 * their HTML entities in the given string and returns the result.
-	 * 
+	 *
 	 * Parameters:
-	 * 
+	 *
 	 * s - String that contains the characters to be converted.
 	 * newline - If newlines should be replaced. Default is true.
 	 */
 	htmlEntities: function(s, newline)
 	{
 		s = String(s || '');
-		
+
 		s = s.replace(/&/g,'&amp;'); // 38 26
 		s = s.replace(/"/g,'&quot;'); // 34 22
 		s = s.replace(/\'/g,'&#39;'); // 39 27
@@ -757,17 +762,17 @@ var mxUtils =
 		{
 			s = s.replace(/\n/g, '&#xa;');
 		}
-		
+
 		return s;
 	},
-	
+
 	/**
 	 * Function: isVml
-	 * 
+	 *
 	 * Returns true if the given node is in the VML namespace.
-	 * 
+	 *
 	 * Parameters:
-	 * 
+	 *
 	 * node - DOM node whose tag urn should be checked.
 	 */
 	isVml: function(node)
@@ -777,14 +782,14 @@ var mxUtils =
 
 	/**
 	 * Function: getXml
-	 * 
+	 *
 	 * Returns the XML content of the specified node. For Internet Explorer,
 	 * all \r\n\t[\t]* are removed from the XML string and the remaining \r\n
 	 * are replaced by \n. All \n are then replaced with linefeed, or &#xa; if
 	 * no linefeed is defined.
-	 * 
+	 *
 	 * Parameters:
-	 * 
+	 *
 	 * node - DOM node to return the XML for.
 	 * linefeed - Optional string that linefeeds are converted into. Default is
 	 * &#xa;
@@ -792,7 +797,7 @@ var mxUtils =
 	getXml: function(node, linefeed)
 	{
 		var xml = '';
-		
+
 		if (mxClient.IS_IE || mxClient.IS_IE11)
 		{
 			xml = mxUtils.getPrettyXml(node, '', '', '');
@@ -800,7 +805,7 @@ var mxUtils =
 		else if (window.XMLSerializer != null)
 		{
 			var xmlSerializer = new XMLSerializer();
-			xml = xmlSerializer.serializeToString(node);     
+			xml = xmlSerializer.serializeToString(node);
 		}
 		else if (node.xml != null)
 		{
@@ -812,19 +817,19 @@ var mxUtils =
 		// Replaces linefeeds with HTML Entities.
 		linefeed = linefeed || '&#xa;';
 		xml = xml.replace(/\n/g, linefeed);
-		  
+
 		return xml;
 	},
-	
+
 	/**
 	 * Function: getPrettyXML
-	 * 
+	 *
 	 * Returns a pretty printed string that represents the XML tree for the
 	 * given node. This method should only be used to print XML for reading,
 	 * use <getXml> instead to obtain a string for processing.
-	 * 
+	 *
 	 * Parameters:
-	 * 
+	 *
 	 * node - DOM node to return the XML for.
 	 * tab - Optional string that specifies the indentation for one level.
 	 * Default is two spaces.
@@ -835,23 +840,23 @@ var mxUtils =
 	getPrettyXml: function(node, tab, indent, newline, ns)
 	{
 		var result = [];
-		
+
 		if (node != null)
 		{
 			tab = (tab != null) ? tab : '  ';
 			indent = (indent != null) ? indent : '';
 			newline = (newline != null) ? newline : '\n';
-			
+
 			if (node.namespaceURI != null && node.namespaceURI != ns)
 			{
 				ns = node.namespaceURI;
-				
+
 				if (node.getAttribute('xmlns') == null)
 				{
 					node.setAttribute('xmlns', node.namespaceURI);
 				}
 			}
-			
+
 			if (node.nodeType == mxConstants.NODETYPE_DOCUMENT)
 			{
 				result.push(mxUtils.getPrettyXml(node.documentElement, tab, indent, newline, ns));
@@ -859,7 +864,7 @@ var mxUtils =
 			else if (node.nodeType == mxConstants.NODETYPE_DOCUMENT_FRAGMENT)
 			{
 				var tmp = node.firstChild;
-				
+
 				if (tmp != null)
 				{
 					while (tmp != null)
@@ -872,7 +877,7 @@ var mxUtils =
 			else if (node.nodeType == mxConstants.NODETYPE_COMMENT)
 			{
 				var value = mxUtils.getTextContent(node);
-				
+
 				if (value.length > 0)
 				{
 					result.push(indent + '<!--' + value + '-->' + newline);
@@ -881,7 +886,7 @@ var mxUtils =
 			else if (node.nodeType == mxConstants.NODETYPE_TEXT)
 			{
 				var value = mxUtils.trim(mxUtils.getTextContent(node));
-				
+
 				if (value.length > 0)
 				{
 					result.push(indent + mxUtils.htmlEntities(value, false) + newline);
@@ -890,7 +895,7 @@ var mxUtils =
 			else if (node.nodeType == mxConstants.NODETYPE_CDATA)
 			{
 				var value = mxUtils.getTextContent(node);
-				
+
 				if (value.length > 0)
 				{
 					result.push(indent + '<![CDATA[' + value + ']]' + newline);
@@ -899,11 +904,11 @@ var mxUtils =
 			else
 			{
 				result.push(indent + '<' + node.nodeName);
-				
+
 				// Creates the string with the node attributes
 				// and converts all HTML entities in the values
 				var attrs = node.attributes;
-				
+
 				if (attrs != null)
 				{
 					for (var i = 0; i < attrs.length; i++)
@@ -916,17 +921,17 @@ var mxUtils =
 				// Recursively creates the XML string for each child
 				// node and appends it here with an indentation
 				var tmp = node.firstChild;
-				
+
 				if (tmp != null)
 				{
 					result.push('>' + newline);
-					
+
 					while (tmp != null)
 					{
 						result.push(mxUtils.getPrettyXml(tmp, tab, indent + tab, newline, ns));
 						tmp = tmp.nextSibling;
 					}
-					
+
 					result.push(indent + '</'+ node.nodeName + '>' + newline);
 				}
 				else
@@ -935,17 +940,17 @@ var mxUtils =
 				}
 			}
 		}
-		
+
 		return result.join('');
 	},
-	
+
 	/**
 	 * Function: extractTextWithWhitespace
-	 * 
+	 *
 	 * Returns the text content of the specified node.
-	 * 
+	 *
 	 * Parameters:
-	 * 
+	 *
 	 * elems - DOM nodes to return the text for.
 	 */
 	extractTextWithWhitespace: function(elems)
@@ -953,7 +958,7 @@ var mxUtils =
 	    // Known block elements for handling linefeeds (list is not complete)
 		var blocks = ['BLOCKQUOTE', 'DIV', 'H1', 'H2', 'H3', 'H4', 'H5', 'H6', 'OL', 'P', 'PRE', 'TABLE', 'UL'];
 		var ret = [];
-		
+
 		function doExtract(elts)
 		{
 			// Single break should be ignored
@@ -962,7 +967,7 @@ var mxUtils =
 			{
 				return;
 			}
-			
+
 		    for (var i = 0; i < elts.length; i++)
 		    {
 		        var elem = elts[i];
@@ -987,46 +992,46 @@ var mxUtils =
 					{
 						doExtract(elem.childNodes);
 					}
-			        
+
 	        		if (i < elts.length - 1 && mxUtils.indexOf(blocks, elts[i + 1].nodeName) >= 0)
 	        		{
-	        			ret.push('\n');		
+	        			ret.push('\n');
 	        		}
 				}
 		    }
 		};
-		
+
 		doExtract(elems);
-	    
+
 	    return ret.join('');
 	},
 
 	/**
 	 * Function: replaceTrailingNewlines
-	 * 
+	 *
 	 * Replaces each trailing newline with the given pattern.
 	 */
 	replaceTrailingNewlines: function(str, pattern)
 	{
 		// LATER: Check is this can be done with a regular expression
 		var postfix = '';
-		
+
 		while (str.length > 0 && str.charAt(str.length - 1) == '\n')
 		{
 			str = str.substring(0, str.length - 1);
 			postfix += pattern;
 		}
-		
+
 		return str + postfix;
 	},
 
 	/**
 	 * Function: getTextContent
-	 * 
+	 *
 	 * Returns the text content of the specified node.
-	 * 
+	 *
 	 * Parameters:
-	 * 
+	 *
 	 * node - DOM node to return the text content for.
 	 */
 	getTextContent: function(node)
@@ -1041,14 +1046,14 @@ var mxUtils =
 			return (node != null) ? node[(node.textContent === undefined) ? 'text' : 'textContent'] : '';
 		}
 	},
-	
+
 	/**
 	 * Function: setTextContent
-	 * 
+	 *
 	 * Sets the text content of the specified node.
-	 * 
+	 *
 	 * Parameters:
-	 * 
+	 *
 	 * node - DOM node to set the text content for.
 	 * text - String that represents the text content.
 	 */
@@ -1063,16 +1068,16 @@ var mxUtils =
 			node[(node.textContent === undefined) ? 'text' : 'textContent'] = text;
 		}
 	},
-	
+
 	/**
 	 * Function: getInnerHtml
-	 * 
+	 *
 	 * Returns the inner HTML for the given node as a string or an empty string
 	 * if no node was specified. The inner HTML is the text representing all
 	 * children of the node, but not the node itself.
-	 * 
+	 *
 	 * Parameters:
-	 * 
+	 *
 	 * node - DOM node to return the inner HTML for.
 	 */
 	getInnerHtml: function()
@@ -1085,7 +1090,7 @@ var mxUtils =
 				{
 					return node.innerHTML;
 				}
-				
+
 				return '';
 			};
 		}
@@ -1098,7 +1103,7 @@ var mxUtils =
 					var serializer = new XMLSerializer();
 					return serializer.serializeToString(node);
 				}
-				
+
 				return '';
 			};
 		}
@@ -1106,13 +1111,13 @@ var mxUtils =
 
 	/**
 	 * Function: getOuterHtml
-	 * 
+	 *
 	 * Returns the outer HTML for the given node as a string or an empty
 	 * string if no node was specified. The outer HTML is the text representing
 	 * all children of the node including the node itself.
-	 * 
+	 *
 	 * Parameters:
-	 * 
+	 *
 	 * node - DOM node to return the outer HTML for.
 	 */
 	getOuterHtml: function()
@@ -1131,15 +1136,15 @@ var mxUtils =
 					{
 						var tmp = [];
 						tmp.push('<'+node.nodeName);
-						
+
 						var attrs = node.attributes;
-						
+
 						if (attrs != null)
 						{
 							for (var i = 0; i < attrs.length; i++)
 							{
 								var value = attrs[i].value;
-								
+
 								if (value != null && value.length > 0)
 								{
 									tmp.push(' ');
@@ -1150,7 +1155,7 @@ var mxUtils =
 								}
 							}
 						}
-						
+
 						if (node.innerHTML.length == 0)
 						{
 							tmp.push('/>');
@@ -1161,11 +1166,11 @@ var mxUtils =
 							tmp.push(node.innerHTML);
 							tmp.push('</'+node.nodeName+'>');
 						}
-						
+
 						return tmp.join('');
 					}
 				}
-				
+
 				return '';
 			};
 		}
@@ -1178,20 +1183,20 @@ var mxUtils =
 					var serializer = new XMLSerializer();
 					return serializer.serializeToString(node);
 				}
-				
+
 				return '';
 			};
 		}
 	}(),
-	
+
 	/**
 	 * Function: write
-	 * 
+	 *
 	 * Creates a text node for the given string and appends it to the given
 	 * parent. Returns the text node.
-	 * 
+	 *
 	 * Parameters:
-	 * 
+	 *
 	 * parent - DOM node to append the text node to.
 	 * text - String representing the text to be added.
 	 */
@@ -1199,23 +1204,23 @@ var mxUtils =
 	{
 		var doc = parent.ownerDocument;
 		var node = doc.createTextNode(text);
-		
+
 		if (parent != null)
 		{
 			parent.appendChild(node);
 		}
-		
+
 		return node;
 	},
-	
+
 	/**
 	 * Function: writeln
-	 * 
+	 *
 	 * Creates a text node for the given string and appends it to the given
 	 * parent with an additional linefeed. Returns the text node.
-	 * 
+	 *
 	 * Parameters:
-	 * 
+	 *
 	 * parent - DOM node to append the text node to.
 	 * text - String representing the text to be added.
 	 */
@@ -1223,30 +1228,30 @@ var mxUtils =
 	{
 		var doc = parent.ownerDocument;
 		var node = doc.createTextNode(text);
-		
+
 		if (parent != null)
 		{
 			parent.appendChild(node);
 			parent.appendChild(document.createElement('br'));
 		}
-		
+
 		return node;
 	},
-	
+
 	/**
 	 * Function: br
-	 * 
+	 *
 	 * Appends a linebreak to the given parent and returns the linebreak.
-	 * 
+	 *
 	 * Parameters:
-	 * 
+	 *
 	 * parent - DOM node to append the linebreak to.
 	 */
 	br: function(parent, count)
 	{
 		count = count || 1;
 		var br = null;
-		
+
 		for (var i = 0; i < count; i++)
 		{
 			if (parent != null)
@@ -1255,25 +1260,25 @@ var mxUtils =
 				parent.appendChild(br);
 			}
 		}
-		
+
 		return br;
 	},
-		
+
 	/**
 	 * Function: button
-	 * 
+	 *
 	 * Returns a new button with the given level and function as an onclick
 	 * event handler.
-	 * 
+	 *
 	 * (code)
 	 * document.body.appendChild(mxUtils.button('Test', function(evt)
 	 * {
 	 *   alert('Hello, World!');
 	 * }));
 	 * (end)
-	 * 
+	 *
 	 * Parameters:
-	 * 
+	 *
 	 * label - String that represents the label of the button.
 	 * funct - Function to be called if the button is pressed.
 	 * doc - Optional document to be used for creating the button. Default is the
@@ -1282,7 +1287,7 @@ var mxUtils =
 	button: function(label, funct, doc)
 	{
 		doc = (doc != null) ? doc : document;
-		
+
 		var button = doc.createElement('button');
 		mxUtils.write(button, label);
 
@@ -1290,18 +1295,18 @@ var mxUtils =
 		{
 			funct(evt);
 		});
-		
+
 		return button;
 	},
-	
+
 	/**
 	 * Function: para
-	 * 
+	 *
 	 * Appends a new paragraph with the given text to the specified parent and
 	 * returns the paragraph.
-	 * 
+	 *
 	 * Parameters:
-	 * 
+	 *
 	 * parent - DOM node to append the text node to.
 	 * text - String representing the text for the new paragraph.
 	 */
@@ -1314,13 +1319,13 @@ var mxUtils =
 		{
 			parent.appendChild(p);
 		}
-		
+
 		return p;
 	},
 
 	/**
 	 * Function: addTransparentBackgroundFilter
-	 * 
+	 *
 	 * Adds a transparent background to the filter of the given node. This
 	 * background can be used in IE8 standards mode (native IE8 only) to pass
 	 * events through the node.
@@ -1333,12 +1338,12 @@ var mxUtils =
 
 	/**
 	 * Function: linkAction
-	 * 
+	 *
 	 * Adds a hyperlink to the specified parent that invokes action on the
 	 * specified editor.
-	 * 
+	 *
 	 * Parameters:
-	 * 
+	 *
 	 * parent - DOM node to contain the new link.
 	 * text - String that is used as the link label.
 	 * editor - <mxEditor> that will execute the action.
@@ -1355,14 +1360,14 @@ var mxUtils =
 
 	/**
 	 * Function: linkInvoke
-	 * 
+	 *
 	 * Adds a hyperlink to the specified parent that invokes the specified
 	 * function on the editor passing along the specified argument. The
 	 * function name is the name of a function of the editor instance,
 	 * not an action name.
-	 * 
+	 *
 	 * Parameters:
-	 * 
+	 *
 	 * parent - DOM node to contain the new link.
 	 * text - String that is used as the link label.
 	 * editor - <mxEditor> instance to execute the function on.
@@ -1377,15 +1382,15 @@ var mxUtils =
 			editor[functName](arg);
 		}, pad);
 	},
-	
+
 	/**
 	 * Function: link
-	 * 
+	 *
 	 * Adds a hyperlink to the specified parent and invokes the given function
 	 * when the link is clicked.
-	 * 
+	 *
 	 * Parameters:
-	 * 
+	 *
 	 * parent - DOM node to contain the new link.
 	 * text - String that is used as the link label.
 	 * funct - Function to execute when the link is clicked.
@@ -1394,37 +1399,37 @@ var mxUtils =
 	link: function(parent, text, funct, pad)
 	{
 		var a = document.createElement('span');
-		
+
 		a.style.color = 'blue';
 		a.style.textDecoration = 'underline';
 		a.style.cursor = 'pointer';
-		
+
 		if (pad != null)
 		{
 			a.style.paddingLeft = pad+'px';
 		}
-		
+
 		mxEvent.addListener(a, 'click', funct);
 		mxUtils.write(a, text);
-		
+
 		if (parent != null)
 		{
 			parent.appendChild(a);
 		}
-		
+
 		return a;
 	},
 
 	/**
 	 * Function: getDocumentSize
-	 * 
+	 *
 	 * Returns the client size for the current document as an <mxRectangle>.
 	 */
 	getDocumentSize: function()
 	{
 		var b = document.body;
 		var d = document.documentElement;
-		
+
 		try
 		{
 			return new mxRectangle(0, 0, b.clientWidth || d.clientWidth, Math.max(b.clientHeight || 0, d.clientHeight));
@@ -1434,19 +1439,19 @@ var mxUtils =
 			return new mxRectangle();
 		}
 	},
-	
+
 	/**
 	 * Function: fit
-	 * 
+	 *
 	 * Makes sure the given node is inside the visible area of the window. This
-	 * is done by setting the left and top in the style. 
+	 * is done by setting the left and top in the style.
 	 */
 	fit: function(node)
 	{
 		var ds = mxUtils.getDocumentSize();
 		var left = parseInt(node.offsetLeft);
 		var width = parseInt(node.offsetWidth);
-			
+
 		var offset = mxUtils.getDocumentScrollOrigin(node.ownerDocument);
 		var sl = offset.x;
 		var st = offset.y;
@@ -1454,17 +1459,17 @@ var mxUtils =
 		var b = document.body;
 		var d = document.documentElement;
 		var right = (sl) + ds.width;
-		
+
 		if (left + width > right)
 		{
 			node.style.left = Math.max(sl, right - width) + 'px';
 		}
-		
+
 		var top = parseInt(node.offsetTop);
 		var height = parseInt(node.offsetHeight);
-		
+
 		var bottom = st + ds.height;
-		
+
 		if (top + height > bottom)
 		{
 			node.style.top = Math.max(st, bottom - height) + 'px';
@@ -1473,13 +1478,13 @@ var mxUtils =
 
 	/**
 	 * Function: load
-	 * 
+	 *
 	 * Loads the specified URL *synchronously* and returns the <mxXmlRequest>.
 	 * Throws an exception if the file cannot be loaded. See <mxUtils.get> for
 	 * an asynchronous implementation.
 	 *
 	 * Example:
-	 * 
+	 *
 	 * (code)
 	 * try
 	 * {
@@ -1492,29 +1497,29 @@ var mxUtils =
 	 *   mxUtils.alert('Cannot load '+filename+': '+ex);
 	 * }
 	 * (end)
-	 * 
+	 *
 	 * Parameters:
-	 * 
+	 *
 	 * url - URL to get the data from.
 	 */
 	load: function(url)
 	{
 		var req = new mxXmlRequest(url, null, 'GET', false);
 		req.send();
-		
+
 		return req;
 	},
 
 	/**
 	 * Function: get
-	 * 
+	 *
 	 * Loads the specified URL *asynchronously* and invokes the given functions
 	 * depending on the request status. Returns the <mxXmlRequest> in use. Both
 	 * functions take the <mxXmlRequest> as the only parameter. See
 	 * <mxUtils.load> for a synchronous implementation.
 	 *
 	 * Example:
-	 * 
+	 *
 	 * (code)
 	 * mxUtils.get(url, function(req)
 	 * {
@@ -1522,10 +1527,10 @@ var mxUtils =
 	 *    // Process XML DOM...
 	 * });
 	 * (end)
-	 * 
+	 *
 	 * So for example, to load a diagram into an existing graph model, the
 	 * following code is used.
-	 * 
+	 *
 	 * (code)
 	 * mxUtils.get(url, function(req)
 	 * {
@@ -1534,9 +1539,9 @@ var mxUtils =
 	 *   dec.decode(node, graph.getModel());
 	 * });
 	 * (end)
-	 * 
+	 *
 	 * Parameters:
-	 * 
+	 *
 	 * url - URL to get the data from.
 	 * onload - Optional function to execute for a successful response.
 	 * onerror - Optional function to execute on error.
@@ -1550,39 +1555,39 @@ var mxUtils =
 	{
 		var req = new mxXmlRequest(url, null, 'GET');
 		var setRequestHeaders = req.setRequestHeaders;
-		
+
 		if (headers)
 		{
 			req.setRequestHeaders = function(request, params)
 			{
 				setRequestHeaders.apply(this, arguments);
-				
+
 				for (var key in headers)
 				{
 					request.setRequestHeader(key, headers[key]);
 				}
 			};
 		}
-		
+
 		if (binary != null)
 		{
 			req.setBinary(binary);
 		}
-		
+
 		req.send(onload, onerror, timeout, ontimeout);
-		
+
 		return req;
 	},
 
 	/**
 	 * Function: getAll
-	 * 
+	 *
 	 * Loads the URLs in the given array *asynchronously* and invokes the given function
 	 * if all requests returned with a valid 2xx status. The error handler is invoked
 	 * once on the first error or invalid response.
 	 *
 	 * Parameters:
-	 * 
+	 *
 	 * urls - Array of URLs to be loaded.
 	 * onload - Callback with array of <mxXmlRequests>.
 	 * onerror - Optional function to execute on error.
@@ -1601,7 +1606,7 @@ var mxUtils =
 
 			errors++;
 		};
-		
+
 		for (var i = 0; i < urls.length; i++)
 		{
 			(function(url, index)
@@ -1609,7 +1614,7 @@ var mxUtils =
 				mxUtils.get(url, function(req)
 				{
 					var status = req.getStatus();
-					
+
 					if (status < 200 || status > 299)
 					{
 						err();
@@ -1618,7 +1623,7 @@ var mxUtils =
 					{
 						result[index] = req;
 						remain--;
-						
+
 						if (remain == 0)
 						{
 							onload(result);
@@ -1627,16 +1632,16 @@ var mxUtils =
 				}, err);
 			})(urls[i], i);
 		}
-		
+
 		if (remain == 0)
 		{
-			onload(result);			
+			onload(result);
 		}
 	},
-	
+
 	/**
 	 * Function: post
-	 * 
+	 *
 	 * Posts the specified params to the given URL *asynchronously* and invokes
 	 * the given functions depending on the request status. Returns the
 	 * <mxXmlRequest> in use. Both functions take the <mxXmlRequest> as the
@@ -1644,7 +1649,7 @@ var mxUtils =
 	 * values.
 	 *
 	 * Example:
-	 * 
+	 *
 	 * (code)
 	 * mxUtils.post(url, 'key=value', function(req)
 	 * {
@@ -1652,9 +1657,9 @@ var mxUtils =
 	 *  // Process req.getDocumentElement() using DOM API if OK...
 	 * });
 	 * (end)
-	 * 
+	 *
 	 * Parameters:
-	 * 
+	 *
 	 * url - URL to get the data from.
 	 * params - Parameters for the post request.
 	 * onload - Optional function to execute for a successful response.
@@ -1664,17 +1669,17 @@ var mxUtils =
 	{
 		return new mxXmlRequest(url, params).send(onload, onerror);
 	},
-	
+
 	/**
 	 * Function: submit
-	 * 
+	 *
 	 * Submits the given parameters to the specified URL using
 	 * <mxXmlRequest.simulate> and returns the <mxXmlRequest>.
 	 * Make sure to use encodeURIComponent for the parameter
 	 * values.
-	 * 
+	 *
 	 * Parameters:
-	 * 
+	 *
 	 * url - URL to get the data from.
 	 * params - Parameters for the form.
 	 * doc - Document to create the form in.
@@ -1684,16 +1689,16 @@ var mxUtils =
 	{
 		return new mxXmlRequest(url, params).simulate(doc, target);
 	},
-	
+
 	/**
 	 * Function: loadInto
-	 * 
+	 *
 	 * Loads the specified URL *asynchronously* into the specified document,
 	 * invoking onload after the document has been loaded. This implementation
 	 * does not use <mxXmlRequest>, but the document.load method.
-	 * 
+	 *
 	 * Parameters:
-	 * 
+	 *
 	 * url - URL to get the data from.
 	 * doc - The document to load the URL into.
 	 * onload - Function to execute when the URL has been loaded.
@@ -1714,18 +1719,18 @@ var mxUtils =
 		{
 			doc.addEventListener('load', onload, false);
 		}
-		
+
 		doc.load(url);
 	},
-	
+
 	/**
 	 * Function: getValue
-	 * 
+	 *
 	 * Returns the value for the given key in the given associative array or
 	 * the given default value if the value is null.
-	 * 
+	 *
 	 * Parameters:
-	 * 
+	 *
 	 * array - Associative array that contains the value for the key.
 	 * key - Key whose value should be returned.
 	 * defaultValue - Value to be returned if the value for the given
@@ -1737,21 +1742,21 @@ var mxUtils =
 
 		if (value == null)
 		{
-			value = defaultValue;			
+			value = defaultValue;
 		}
-		
+
 		return value;
 	},
-	
+
 	/**
 	 * Function: getNumber
-	 * 
+	 *
 	 * Returns the numeric value for the given key in the given associative
 	 * array or the given default value (or 0) if the value is null. The value
 	 * is converted to a numeric value using the Number function.
-	 * 
+	 *
 	 * Parameters:
-	 * 
+	 *
 	 * array - Associative array that contains the value for the key.
 	 * key - Key whose value should be returned.
 	 * defaultValue - Value to be returned if the value for the given
@@ -1763,21 +1768,21 @@ var mxUtils =
 
 		if (value == null)
 		{
-			value = defaultValue || 0;			
+			value = defaultValue || 0;
 		}
-		
+
 		return Number(value);
 	},
-	
+
 	/**
 	 * Function: getColor
-	 * 
+	 *
 	 * Returns the color value for the given key in the given associative
 	 * array or the given default value if the value is null. If the value
 	 * is <mxConstants.NONE> then null is returned.
-	 * 
+	 *
 	 * Parameters:
-	 * 
+	 *
 	 * array - Associative array that contains the value for the key.
 	 * key - Key whose value should be returned.
 	 * defaultValue - Value to be returned if the value for the given
@@ -1795,19 +1800,19 @@ var mxUtils =
 		{
 			value = null;
 		}
-		
+
 		return value;
 	},
 
 	/**
 	 * Function: clone
-	 * 
+	 *
 	 * Recursively clones the specified object ignoring all fieldnames in the
 	 * given array of transient fields. <mxObjectIdentity.FIELD_NAME> is always
 	 * ignored by this function.
-	 * 
+	 *
 	 * Parameters:
-	 * 
+	 *
 	 * obj - Object to be cloned.
 	 * transients - Optional array of strings representing the fieldname to be
 	 * ignored.
@@ -1820,11 +1825,11 @@ var mxUtils =
 	{
 		shallow = (shallow != null) ? shallow : false;
 		var clone = null;
-		
+
 		if (obj != null && typeof(obj.constructor) == 'function')
 		{
 			clone = new obj.constructor();
-			
+
 		    for (var i in obj)
 		    {
 		    	if (i != mxObjectIdentity.FIELD_NAME && (transients == null ||
@@ -1841,17 +1846,17 @@ var mxUtils =
 				}
 		    }
 		}
-		
+
 	    return clone;
 	},
 
 	/**
 	 * Function: equalPoints
-	 * 
+	 *
 	 * Compares all mxPoints in the given lists.
-	 * 
+	 *
 	 * Parameters:
-	 * 
+	 *
 	 * a - Array of <mxPoints> to be compared.
 	 * b - Array of <mxPoints> to be compared.
 	 */
@@ -1875,18 +1880,18 @@ var mxUtils =
 				}
 			}
 		}
-		
+
 		return true;
 	},
 
 	/**
 	 * Function: equalEntries
-	 * 
+	 *
 	 * Returns true if all properties of the given objects are equal. Values
 	 * with NaN are equal to NaN and unequal to any other value.
-	 * 
+	 *
 	 * Parameters:
-	 * 
+	 *
 	 * a - First object to be compared.
 	 * b - Second object to be compared.
 	 */
@@ -1906,31 +1911,31 @@ var mxUtils =
 			{
 				count++;
 			}
-			
+
 			for (var key in a)
 			{
 				count--
-				
+
 				if ((!mxUtils.isNaN(a[key]) || !mxUtils.isNaN(b[key])) && a[key] != b[key])
 				{
 					return false;
 				}
 			}
 		}
-		
+
 		return count == 0;
 	},
-	
+
 	/**
 	 * Function: removeDuplicates
-	 * 
+	 *
 	 * Removes all duplicates from the given array.
 	 */
 	removeDuplicates: function(arr)
 	{
 		var dict = new mxDictionary();
 		var result = [];
-		
+
 		for (var i = 0; i < arr.length; i++)
 		{
 			if (!dict.get(arr[i]))
@@ -1942,7 +1947,7 @@ var mxUtils =
 
 		return result;
 	},
-	
+
 	/**
 	 * Function: isNaN
 	 *
@@ -1952,7 +1957,7 @@ var mxUtils =
 	{
 		return typeof(value) == 'number' && isNaN(value);
 	},
-	
+
 	/**
 	 * Function: extend
 	 *
@@ -1960,18 +1965,18 @@ var mxUtils =
 	 * Note that this does not call the constructor of the superclass at this
 	 * point, the superclass constructor should be called explicitely in the
 	 * subclass constructor. Below is an example.
-	 * 
+	 *
 	 * (code)
 	 * MyGraph = function(container, model, renderHint, stylesheet)
 	 * {
 	 *   mxGraph.call(this, container, model, renderHint, stylesheet);
 	 * }
-	 * 
+	 *
 	 * mxUtils.extend(MyGraph, mxGraph);
 	 * (end)
-	 * 
+	 *
 	 * Parameters:
-	 * 
+	 *
 	 * ctor - Constructor of the subclass.
 	 * superCtor - Constructor of the superclass.
 	 */
@@ -1979,24 +1984,24 @@ var mxUtils =
 	{
 		var f = function() {};
 		f.prototype = superCtor.prototype;
-		
+
 		ctor.prototype = new f();
 		ctor.prototype.constructor = ctor;
 	},
 
 	/**
 	 * Function: toString
-	 * 
+	 *
 	 * Returns a textual representation of the specified object.
-	 * 
+	 *
 	 * Parameters:
-	 * 
+	 *
 	 * obj - Object to return the string representation for.
 	 */
 	toString: function(obj)
 	{
 	    var output = '';
-	    
+
 	    for (var i in obj)
 	    {
 	    	try
@@ -2011,7 +2016,7 @@ var mxUtils =
 		        }
 		        else if (typeof(obj[i]) == 'object')
 		        {
-		        	var ctor = mxUtils.getFunctionName(obj[i].constructor); 
+		        	var ctor = mxUtils.getFunctionName(obj[i].constructor);
 		            output += i + ' => [' + ctor + ']\n';
 		        }
 		        else
@@ -2024,13 +2029,13 @@ var mxUtils =
 	    		output += i + '=' + e.message;
 	    	}
 	    }
-	    
+
 	    return output;
 	},
 
 	/**
 	 * Function: toRadians
-	 * 
+	 *
 	 * Converts the given degree to radians.
 	 */
 	toRadians: function(deg)
@@ -2040,29 +2045,29 @@ var mxUtils =
 
 	/**
 	 * Function: toDegree
-	 * 
+	 *
 	 * Converts the given radians to degree.
 	 */
 	toDegree: function(rad)
 	{
 		return rad * 180 / Math.PI;
 	},
-	
+
 	/**
 	 * Function: arcToCurves
-	 * 
+	 *
 	 * Converts the given arc to a series of curves.
 	 */
 	arcToCurves: function(x0, y0, r1, r2, angle, largeArcFlag, sweepFlag, x, y)
 	{
 		x -= x0;
 		y -= y0;
-		
-        if (r1 === 0 || r2 === 0) 
+
+        if (r1 === 0 || r2 === 0)
         {
         	return result;
         }
-        
+
         var fS = sweepFlag;
         var psai = angle;
         r1 = Math.abs(r1);
@@ -2079,25 +2084,25 @@ var mxUtils =
         var r2y = r2 * r2;
         var lamda = rxdd / r1x + rydd / r2y;
         var sds;
-        
-        if (lamda > 1) 
+
+        if (lamda > 1)
         {
         	r1 = Math.sqrt(lamda) * r1;
         	r2 = Math.sqrt(lamda) * r2;
         	sds = 0;
-        }  
+        }
         else
         {
         	var seif = 1;
-            
-        	if (largeArcFlag === fS) 
+
+        	if (largeArcFlag === fS)
         	{
         		seif = -1;
         	}
-            
+
         	sds = seif * Math.sqrt((r1x * r2y - r1x * rydd - r2y * rxdd) / (r1x * rydd + r2y * rxdd));
         }
-        
+
         var txd = sds * r1 * ryd / r2;
         var tyd = -1 * sds * r2 * rxd / r1;
         var tx = cpsi * txd - spsi * tyd + x / 2;
@@ -2106,16 +2111,16 @@ var mxUtils =
         var s1 = (rad >= 0) ? rad : 2 * Math.PI + rad;
         rad = Math.atan2((-ryd - tyd) / r2, (-rxd - txd) / r1) - Math.atan2((ryd - tyd) / r2, (rxd - txd) / r1);
         var dr = (rad >= 0) ? rad : 2 * Math.PI + rad;
-        
-        if (fS == 0 && dr > 0) 
+
+        if (fS == 0 && dr > 0)
         {
         	dr -= 2 * Math.PI;
         }
-        else if (fS != 0 && dr < 0) 
+        else if (fS != 0 && dr < 0)
         {
         	dr += 2 * Math.PI;
         }
-        
+
         var sse = dr * 2 / Math.PI;
         var seg = Math.ceil(sse < 0 ? -1 * sse : sse);
         var segr = dr / seg;
@@ -2132,18 +2137,18 @@ var mxUtils =
         var y3 = 0;
 
 		var result = [];
-        
-        for (var n = 0; n < seg; ++n) 
+
+        for (var n = 0; n < seg; ++n)
         {
             s1 += segr;
             mc = Math.cos(s1);
             ms = Math.sin(s1);
-            
+
             x3 = cpsir1 * mc - spsir2 * ms + tx;
             y3 = spsir1 * mc + cpsir2 * ms + ty;
             var dx = -t * (cpsir1 * ms + spsir2 * mc);
             var dy = -t * (spsir1 * ms - cpsir2 * mc);
-            
+
             // CurveTo updates x0, y0 so need to restore it
             var index = n * 6;
             result[index] = Number(x2 + x0);
@@ -2152,21 +2157,21 @@ var mxUtils =
             result[index + 3] = Number(y3 - dy + y0);
             result[index + 4] = Number(x3 + x0);
             result[index + 5] = Number(y3 + y0);
-            
+
 			x2 = x3 + dx;
             y2 = y3 + dy;
         }
-        
+
         return result;
 	},
 
 	/**
 	 * Function: getBoundingBox
-	 * 
+	 *
 	 * Returns the bounding box for the rotated rectangle.
-	 * 
+	 *
 	 * Parameters:
-	 * 
+	 *
 	 * rect - <mxRectangle> to be rotated.
 	 * angle - Number that represents the angle (in degrees).
 	 * cx - Optional <mxPoint> that represents the rotation center. If no
@@ -2205,7 +2210,7 @@ var mxUtils =
 
 	/**
 	 * Function: getRotatedPoint
-	 * 
+	 *
 	 * Rotates the given point by the given cos and sin.
 	 */
 	getRotatedPoint: function(pt, cos, sin, c)
@@ -2219,15 +2224,15 @@ var mxUtils =
 
 		return new mxPoint(x1 + c.x, y1 + c.y);
 	},
-	
+
 	/**
 	 * Returns an integer mask of the port constraints of the given map
 	 * @param dict the style map to determine the port constraints for
 	 * @param defaultValue Default value to return if the key is undefined.
 	 * @return the mask of port constraint directions
-	 * 
+	 *
 	 * Parameters:
-	 * 
+	 *
 	 * terminal - <mxCelState> that represents the terminal.
 	 * edge - <mxCellState> that represents the edge.
 	 * source - Boolean that specifies if the terminal is the source terminal.
@@ -2238,7 +2243,7 @@ var mxUtils =
 		var value = mxUtils.getValue(terminal.style, mxConstants.STYLE_PORT_CONSTRAINT,
 			mxUtils.getValue(edge.style, (source) ? mxConstants.STYLE_SOURCE_PORT_CONSTRAINT :
 				mxConstants.STYLE_TARGET_PORT_CONSTRAINT, null));
-		
+
 		if (value == null)
 		{
 			return defaultValue;
@@ -2249,18 +2254,18 @@ var mxUtils =
 			var returnValue = mxConstants.DIRECTION_MASK_NONE;
 			var constraintRotationEnabled = mxUtils.getValue(terminal.style, mxConstants.STYLE_PORT_CONSTRAINT_ROTATION, 0);
 			var rotation = 0;
-			
+
 			if (constraintRotationEnabled == 1)
 			{
 				rotation = mxUtils.getValue(terminal.style, mxConstants.STYLE_ROTATION, 0);
 			}
-			
+
 			var quad = 0;
 
 			if (rotation > 45)
 			{
 				quad = 1;
-				
+
 				if (rotation >= 135)
 				{
 					quad = 2;
@@ -2269,7 +2274,7 @@ var mxUtils =
 			else if (rotation < -45)
 			{
 				quad = 3;
-				
+
 				if (rotation <= -135)
 				{
 					quad = 2;
@@ -2352,46 +2357,46 @@ var mxUtils =
 			return returnValue;
 		}
 	},
-	
+
 	/**
 	 * Function: reversePortConstraints
-	 * 
+	 *
 	 * Reverse the port constraint bitmask. For example, north | east
 	 * becomes south | west
 	 */
 	reversePortConstraints: function(constraint)
 	{
 		var result = 0;
-		
+
 		result = (constraint & mxConstants.DIRECTION_MASK_WEST) << 3;
 		result |= (constraint & mxConstants.DIRECTION_MASK_NORTH) << 1;
 		result |= (constraint & mxConstants.DIRECTION_MASK_SOUTH) >> 1;
 		result |= (constraint & mxConstants.DIRECTION_MASK_EAST) >> 3;
-		
+
 		return result;
 	},
-	
+
 	/**
 	 * Function: findNearestSegment
-	 * 
+	 *
 	 * Finds the index of the nearest segment on the given cell state for
 	 * the specified coordinate pair.
 	 */
 	findNearestSegment: function(state, x, y)
 	{
 		var index = -1;
-		
+
 		if (state.absolutePoints.length > 0)
 		{
 			var last = state.absolutePoints[0];
 			var min = null;
-			
+
 			for (var i = 1; i < state.absolutePoints.length; i++)
 			{
 				var current = state.absolutePoints[i];
 				var dist = mxUtils.ptSegDistSq(last.x, last.y,
 					current.x, current.y, x, y);
-				
+
 				if (min == null || dist < min)
 				{
 					min = dist;
@@ -2401,13 +2406,13 @@ var mxUtils =
 				last = current;
 			}
 		}
-		
+
 		return index;
 	},
 
 	/**
 	 * Function: getDirectedBounds
-	 * 
+	 *
 	 * Adds the given margins to the given rectangle and rotates and flips the
 	 * rectangle according to the respective styles in style.
 	 */
@@ -2421,7 +2426,7 @@ var mxUtils =
 		m.y = Math.round(Math.max(0, Math.min(rect.height, m.y)));
 		m.width = Math.round(Math.max(0, Math.min(rect.width, m.width)));
 		m.height = Math.round(Math.max(0, Math.min(rect.height, m.height)));
-		
+
 		if ((flipV && (d == mxConstants.DIRECTION_SOUTH || d == mxConstants.DIRECTION_NORTH)) ||
 			(flipH && (d == mxConstants.DIRECTION_EAST || d == mxConstants.DIRECTION_WEST)))
 		{
@@ -2429,7 +2434,7 @@ var mxUtils =
 			m.x = m.width;
 			m.width = tmp;
 		}
-			
+
 		if ((flipH && (d == mxConstants.DIRECTION_SOUTH || d == mxConstants.DIRECTION_NORTH)) ||
 			(flipV && (d == mxConstants.DIRECTION_EAST || d == mxConstants.DIRECTION_WEST)))
 		{
@@ -2437,9 +2442,9 @@ var mxUtils =
 			m.y = m.height;
 			m.height = tmp;
 		}
-		
+
 		var m2 = mxRectangle.fromRectangle(m);
-		
+
 		if (d == mxConstants.DIRECTION_SOUTH)
 		{
 			m2.y = m.x;
@@ -2461,48 +2466,48 @@ var mxUtils =
 			m2.width = m.height;
 			m2.height = m.x;
 		}
-		
+
 		return new mxRectangle(rect.x + m2.x, rect.y + m2.y, rect.width - m2.width - m2.x, rect.height - m2.height - m2.y);
 	},
 
 	/**
 	 * Function: getPerimeterPoint
-	 * 
+	 *
 	 * Returns the intersection between the polygon defined by the array of
 	 * points and the line between center and point.
 	 */
 	getPerimeterPoint: function (pts, center, point)
 	{
 		var min = null;
-		
+
 		for (var i = 0; i < pts.length - 1; i++)
 		{
 			var pt = mxUtils.intersection(pts[i].x, pts[i].y, pts[i + 1].x, pts[i + 1].y,
 				center.x, center.y, point.x, point.y);
-			
+
 			if (pt != null)
 			{
 				var dx = point.x - pt.x;
 				var dy = point.y - pt.y;
 				var ip = {p: pt, distSq: dy * dy + dx * dx};
-				
+
 				if (ip != null && (min == null || min.distSq > ip.distSq))
 				{
 					min = ip;
 				}
 			}
 		}
-		
+
 		return (min != null) ? min.p : null;
 	},
 
 	/**
 	 * Function: rectangleIntersectsSegment
-	 * 
+	 *
 	 * Returns true if the given rectangle intersects the given segment.
-	 * 
+	 *
 	 * Parameters:
-	 * 
+	 *
 	 * bounds - <mxRectangle> that represents the rectangle.
 	 * p1 - <mxPoint> that represents the first point of the segment.
 	 * p2 - <mxPoint> that represents the second point of the segment.
@@ -2513,38 +2518,38 @@ var mxUtils =
 		var left = bounds.x;
 		var bottom = top + bounds.height;
 		var right = left + bounds.width;
-			
+
 		// Find min and max X for the segment
 		var minX = p1.x;
 		var maxX = p2.x;
-		
+
 		if (p1.x > p2.x)
 		{
 		  minX = p2.x;
 		  maxX = p1.x;
 		}
-		
+
 		// Find the intersection of the segment's and rectangle's x-projections
 		if (maxX > right)
 		{
 		  maxX = right;
 		}
-		
+
 		if (minX < left)
 		{
 		  minX = left;
 		}
-		
+
 		if (minX > maxX) // If their projections do not intersect return false
 		{
 		  return false;
 		}
-		
+
 		// Find corresponding min and max Y for min and max X we found before
 		var minY = p1.y;
 		var maxY = p2.y;
 		var dx = p2.x - p1.x;
-		
+
 		if (Math.abs(dx) > 0.0000001)
 		{
 		  var a = (p2.y - p1.y) / dx;
@@ -2552,40 +2557,40 @@ var mxUtils =
 		  minY = a * minX + b;
 		  maxY = a * maxX + b;
 		}
-		
+
 		if (minY > maxY)
 		{
 		  var tmp = maxY;
 		  maxY = minY;
 		  minY = tmp;
 		}
-		
+
 		// Find the intersection of the segment's and rectangle's y-projections
 		if (maxY > bottom)
 		{
 		  maxY = bottom;
 		}
-		
+
 		if (minY < top)
 		{
 		  minY = top;
 		}
-		
+
 		if (minY > maxY) // If Y-projections do not intersect return false
 		{
 		  return false;
 		}
-		
+
 		return true;
 	},
-	
+
 	/**
 	 * Function: contains
-	 * 
+	 *
 	 * Returns true if the specified point (x, y) is contained in the given rectangle.
-	 * 
+	 *
 	 * Parameters:
-	 * 
+	 *
 	 * bounds - <mxRectangle> that represents the area.
 	 * x - X-coordinate of the point.
 	 * y - Y-coordinate of the point.
@@ -2598,11 +2603,11 @@ var mxUtils =
 
 	/**
 	 * Function: intersects
-	 * 
+	 *
 	 * Returns true if the two rectangles intersect.
-	 * 
+	 *
 	 * Parameters:
-	 * 
+	 *
 	 * a - <mxRectangle> to be checked for intersection.
 	 * b - <mxRectangle> to be checked for intersection.
 	 */
@@ -2612,17 +2617,17 @@ var mxUtils =
 		var th = a.height;
 		var rw = b.width;
 		var rh = b.height;
-		
+
 		if (rw <= 0 || rh <= 0 || tw <= 0 || th <= 0)
 		{
 		    return false;
 		}
-		
+
 		var tx = a.x;
 		var ty = a.y;
 		var rx = b.x;
 		var ry = b.y;
-		
+
 		rw += rx;
 		rh += ry;
 		tw += tx;
@@ -2636,11 +2641,11 @@ var mxUtils =
 
 	/**
 	 * Function: intersectsHotspot
-	 * 
+	 *
 	 * Returns true if the state and the hotspot intersect.
-	 * 
+	 *
 	 * Parameters:
-	 * 
+	 *
 	 * state - <mxCellState>
 	 * x - X-coordinate.
 	 * y - Y-coordinate.
@@ -2653,14 +2658,14 @@ var mxUtils =
 		hotspot = (hotspot != null) ? hotspot : 1;
 		min = (min != null) ? min : 0;
 		max = (max != null) ? max : 0;
-		
+
 		if (hotspot > 0)
 		{
 			var cx = state.getCenterX();
 			var cy = state.getCenterY();
 			var w = state.width;
 			var h = state.height;
-			
+
 			var start = mxUtils.getValue(state.style, mxConstants.STYLE_STARTSIZE) * state.view.scale;
 
 			if (start > 0)
@@ -2679,16 +2684,16 @@ var mxUtils =
 
 			w = Math.max(min, w * hotspot);
 			h = Math.max(min, h * hotspot);
-			
+
 			if (max > 0)
 			{
 				w = Math.min(w, max);
 				h = Math.min(h, max);
 			}
-			
+
 			var rect = new mxRectangle(cx - w / 2, cy - h / 2, w, h);
 			var alpha = mxUtils.toRadians(mxUtils.getValue(state.style, mxConstants.STYLE_ROTATION) || 0);
-			
+
 			if (alpha != 0)
 			{
 				var cos = Math.cos(-alpha);
@@ -2698,22 +2703,22 @@ var mxUtils =
 				x = pt.x;
 				y = pt.y;
 			}
-			
-			return mxUtils.contains(rect, x, y);			
+
+			return mxUtils.contains(rect, x, y);
 		}
-		
+
 		return true;
 	},
 
 	/**
 	 * Function: getOffset
-	 * 
+	 *
 	 * Returns the offset for the specified container as an <mxPoint>. The
 	 * offset is the distance from the top left corner of the container to the
 	 * top left corner of the document.
-	 * 
+	 *
 	 * Parameters:
-	 * 
+	 *
 	 * container - DOM node to return the offset for.
 	 * scollOffset - Optional boolean to add the scroll offset of the document.
 	 * Default is false.
@@ -2722,7 +2727,7 @@ var mxUtils =
 	{
 		var offsetLeft = 0;
 		var offsetTop = 0;
-		
+
 		// Ignores document scroll origin for fixed elements
 		var fixed = false;
 		var node = container;
@@ -2732,36 +2737,36 @@ var mxUtils =
 		while (node != null && node != b && node != d && !fixed)
 		{
 			var style = mxUtils.getCurrentStyle(node);
-			
+
 			if (style != null)
 			{
 				fixed = fixed || style.position == 'fixed';
 			}
-			
+
 			node = node.parentNode;
 		}
-		
+
 		if (!scrollOffset && !fixed)
 		{
 			var offset = mxUtils.getDocumentScrollOrigin(container.ownerDocument);
 			offsetLeft += offset.x;
 			offsetTop += offset.y;
 		}
-		
+
 		var r = container.getBoundingClientRect();
-		
+
 		if (r != null)
 		{
 			offsetLeft += r.left;
 			offsetTop += r.top;
 		}
-		
+
 		return new mxPoint(offsetLeft, offsetTop);
 	},
 
 	/**
 	 * Function: getDocumentScrollOrigin
-	 * 
+	 *
 	 * Returns the scroll origin of the given document or the current document
 	 * if no document is given.
 	 */
@@ -2774,21 +2779,21 @@ var mxUtils =
 		else
 		{
 			var wnd = doc.defaultView || doc.parentWindow;
-			
+
 			var x = (wnd != null && window.pageXOffset !== undefined) ? window.pageXOffset : (document.documentElement || document.body.parentNode || document.body).scrollLeft;
 			var y = (wnd != null && window.pageYOffset !== undefined) ? window.pageYOffset : (document.documentElement || document.body.parentNode || document.body).scrollTop;
-			
+
 			return new mxPoint(x, y);
 		}
 	},
-	
+
 	/**
 	 * Function: getScrollOrigin
-	 * 
+	 *
 	 * Returns the top, left corner of the viewrect as an <mxPoint>.
-	 * 
+	 *
 	 * Parameters:
-	 * 
+	 *
 	 * node - DOM node whose scroll origin should be returned.
 	 * includeAncestors - Whether the scroll origin of the ancestors should be
 	 * included. Default is false.
@@ -2799,7 +2804,7 @@ var mxUtils =
 	{
 		includeAncestors = (includeAncestors != null) ? includeAncestors : false;
 		includeDocument = (includeDocument != null) ? includeDocument : true;
-		
+
 		var doc = (node != null) ? node.ownerDocument : document;
 		var b = doc.body;
 		var d = doc.documentElement;
@@ -2813,9 +2818,9 @@ var mxUtils =
 				result.x += node.scrollLeft;
 				result.y += node.scrollTop;
 			}
-			
+
 			var style = mxUtils.getCurrentStyle(node);
-			
+
 			if (style != null)
 			{
 				fixed = fixed || style.position == 'fixed';
@@ -2831,23 +2836,23 @@ var mxUtils =
 			result.x += origin.x;
 			result.y += origin.y;
 		}
-		
+
 		return result;
 	},
 
 	/**
 	 * Function: convertPoint
-	 * 
+	 *
 	 * Converts the specified point (x, y) using the offset of the specified
 	 * container and returns a new <mxPoint> with the result.
-	 * 
+	 *
 	 * (code)
 	 * var pt = mxUtils.convertPoint(graph.container,
 	 *   mxEvent.getClientX(evt), mxEvent.getClientY(evt));
 	 * (end)
-	 * 
+	 *
 	 * Parameters:
-	 * 
+	 *
 	 * container - DOM node to use for the offset.
 	 * x - X-coordinate of the point to be converted.
 	 * y - Y-coordinate of the point to be converted.
@@ -2859,16 +2864,16 @@ var mxUtils =
 
 		offset.x -= origin.x;
 		offset.y -= origin.y;
-		
+
 		return new mxPoint(x - offset.x, y - offset.y);
 	},
-	
+
 	/**
 	 * Function: ltrim
-	 * 
+	 *
 	 * Strips all whitespaces from the beginning of the string. Without the
 	 * second parameter, this will trim these characters:
-	 * 
+	 *
 	 * - " " (ASCII 32 (0x20)), an ordinary space
 	 * - "\t" (ASCII 9 (0x09)), a tab
 	 * - "\n" (ASCII 10 (0x0A)), a new line (line feed)
@@ -2879,16 +2884,16 @@ var mxUtils =
 	ltrim: function(str, chars)
 	{
 		chars = chars || "\\s";
-		
+
 		return (str != null) ? str.replace(new RegExp("^[" + chars + "]+", "g"), "") : null;
 	},
-	
+
 	/**
 	 * Function: rtrim
-	 * 
+	 *
 	 * Strips all whitespaces from the end of the string. Without the second
 	 * parameter, this will trim these characters:
-	 * 
+	 *
 	 * - " " (ASCII 32 (0x20)), an ordinary space
 	 * - "\t" (ASCII 9 (0x09)), a tab
 	 * - "\n" (ASCII 10 (0x0A)), a new line (line feed)
@@ -2899,17 +2904,17 @@ var mxUtils =
 	rtrim: function(str, chars)
 	{
 		chars = chars || "\\s";
-		
+
 		return (str != null) ? str.replace(new RegExp("[" + chars + "]+$", "g"), "") : null;
 	},
-	
+
 	/**
 	 * Function: trim
-	 * 
+	 *
 	 * Strips all whitespaces from both end of the string.
 	 * Without the second parameter, Javascript function will trim these
 	 * characters:
-	 * 
+	 *
 	 * - " " (ASCII 32 (0x20)), an ordinary space
 	 * - "\t" (ASCII 9 (0x09)), a tab
 	 * - "\n" (ASCII 10 (0x0A)), a new line (line feed)
@@ -2921,15 +2926,15 @@ var mxUtils =
 	{
 		return mxUtils.ltrim(mxUtils.rtrim(str, chars), chars);
 	},
-	
+
 	/**
 	 * Function: isNumeric
-	 * 
+	 *
 	 * Returns true if the specified value is numeric, that is, if it is not
 	 * null, not an empty string, not a HEX number and isNaN returns false.
-	 * 
+	 *
 	 * Parameters:
-	 * 
+	 *
 	 * n - String representing the possibly numeric value.
 	 */
 	isNumeric: function(n)
@@ -2939,11 +2944,11 @@ var mxUtils =
 
 	/**
 	 * Function: isInteger
-	 * 
+	 *
 	 * Returns true if the given value is an valid integer number.
-	 * 
+	 *
 	 * Parameters:
-	 * 
+	 *
 	 * n - String representing the possibly numeric value.
 	 */
 	isInteger: function(n)
@@ -2953,7 +2958,7 @@ var mxUtils =
 
 	/**
 	 * Function: mod
-	 * 
+	 *
 	 * Returns the remainder of division of n by m. You should use this instead
 	 * of the built-in operation as the built-in operation does not properly
 	 * handle negative numbers.
@@ -2965,11 +2970,11 @@ var mxUtils =
 
 	/**
 	 * Function: intersection
-	 * 
+	 *
 	 * Returns the intersection of two lines as an <mxPoint>.
-	 * 
+	 *
 	 * Parameters:
-	 * 
+	 *
 	 * x0 - X-coordinate of the first line's startpoint.
 	 * y0 - X-coordinate of the first line's startpoint.
 	 * x1 - X-coordinate of the first line's endpoint.
@@ -2987,29 +2992,29 @@ var mxUtils =
 
 		var ua = nume_a / denom;
 		var ub = nume_b / denom;
-		
+
 		if(ua >= 0.0 && ua <= 1.0 && ub >= 0.0 && ub <= 1.0)
 		{
 			// Get the intersection point
 			var x = x0 + ua * (x1 - x0);
 			var y = y0 + ua * (y1 - y0);
-			
+
 			return new mxPoint(x, y);
 		}
-		
+
 		// No intersection
 		return null;
 	},
-	
+
 	/**
 	 * Function: ptSegDistSq
-	 * 
+	 *
 	 * Returns the square distance between a segment and a point. To get the
 	 * distance between a point and a line (with infinite length) use
 	 * <mxUtils.ptLineDist>.
-	 * 
+	 *
 	 * Parameters:
-	 * 
+	 *
 	 * x1 - X-coordinate of the startpoint of the segment.
 	 * y1 - Y-coordinate of the startpoint of the segment.
 	 * x2 - X-coordinate of the endpoint of the segment.
@@ -3049,24 +3054,24 @@ var mxUtils =
 		}
 
 		var lenSq = px * px + py * py - projlenSq;
-		
+
 		if (lenSq < 0)
 		{
 		    lenSq = 0;
 		}
-		
+
 		return lenSq;
     },
-	
+
 	/**
 	 * Function: ptLineDist
-	 * 
+	 *
 	 * Returns the distance between a line defined by two points and a point.
 	 * To get the distance between a point and a segment (with a specific
 	 * length) use <mxUtils.ptSeqDistSq>.
-	 * 
+	 *
 	 * Parameters:
-	 * 
+	 *
 	 * x1 - X-coordinate of point 1 of the line.
 	 * y1 - Y-coordinate of point 1 of the line.
 	 * x2 - X-coordinate of point 1 of the line.
@@ -3079,15 +3084,15 @@ var mxUtils =
 		return Math.abs((y2 - y1) * px - (x2 - x1) * py + x2 * y1 - y2 * x1) /
 			Math.sqrt((y2 - y1) * (y2 - y1) + (x2 - x1) * (x2 - x1));
     },
-    	
+
 	/**
 	 * Function: relativeCcw
-	 * 
+	 *
 	 * Returns 1 if the given point on the right side of the segment, 0 if its
 	 * on the segment, and -1 if the point is on the left side of the segment.
-	 * 
+	 *
 	 * Parameters:
-	 * 
+	 *
 	 * x1 - X-coordinate of the startpoint of the segment.
 	 * y1 - Y-coordinate of the startpoint of the segment.
 	 * x2 - X-coordinate of the endpoint of the segment.
@@ -3102,30 +3107,30 @@ var mxUtils =
 		px -= x1;
 		py -= y1;
 		var ccw = px * y2 - py * x2;
-		
+
 		if (ccw == 0.0)
 		{
 		    ccw = px * x2 + py * y2;
-		    
+
 		    if (ccw > 0.0)
 		    {
 				px -= x2;
 				py -= y2;
 				ccw = px * x2 + py * y2;
-				
+
 				if (ccw < 0.0)
 				{
 				    ccw = 0.0;
 				}
 		    }
 		}
-		
+
 		return (ccw < 0.0) ? -1 : ((ccw > 0.0) ? 1 : 0);
     },
-    
+
 	/**
 	 * Function: animateChanges
-	 * 
+	 *
 	 * See <mxEffects.animateChanges>. This is for backwards compatibility and
 	 * will be removed later.
 	 */
@@ -3134,10 +3139,10 @@ var mxUtils =
 		// LATER: Deprecated, remove this function
     	mxEffects.animateChanges.apply(this, arguments);
 	},
-    
+
 	/**
 	 * Function: cascadeOpacity
-	 * 
+	 *
 	 * See <mxEffects.cascadeOpacity>. This is for backwards compatibility and
 	 * will be removed later.
 	 */
@@ -3148,7 +3153,7 @@ var mxUtils =
 
 	/**
 	 * Function: fadeOut
-	 * 
+	 *
 	 * See <mxEffects.fadeOut>. This is for backwards compatibility and
 	 * will be removed later.
 	 */
@@ -3156,14 +3161,14 @@ var mxUtils =
 	{
 		mxEffects.fadeOut.apply(this, arguments);
 	},
-	
+
 	/**
 	 * Function: setOpacity
-	 * 
+	 *
 	 * Sets the opacity of the specified DOM node to the given value in %.
-	 * 
+	 *
 	 * Parameters:
-	 * 
+	 *
 	 * node - DOM node to set the opacity for.
 	 * value - Opacity in %. Possible values are between 0 and 100.
 	 */
@@ -3200,18 +3205,18 @@ var mxUtils =
 
 	/**
 	 * Function: createImage
-	 * 
+	 *
 	 * Creates and returns an image (IMG node) or VML image (v:image) in IE6 in
 	 * quirks mode.
-	 * 
+	 *
 	 * Parameters:
-	 * 
+	 *
 	 * src - URL that points to the image to be displayed.
 	 */
 	createImage: function(src)
 	{
         var imageNode = null;
-        
+
 		if (mxClient.IS_IE6 && document.compatMode != 'CSS1Compat')
 		{
         	imageNode = document.createElement(mxClient.VML_PREFIX + ':image');
@@ -3224,13 +3229,13 @@ var mxUtils =
 			imageNode.setAttribute('src', src);
 			imageNode.setAttribute('border', '0');
 		}
-		
+
 		return imageNode;
 	},
 
 	/**
 	 * Function: sortCells
-	 * 
+	 *
 	 * Sorts the given cells according to the order in the cell hierarchy.
 	 * Ascending is optional and defaults to true.
 	 */
@@ -3241,37 +3246,37 @@ var mxUtils =
 		cells.sort(function(o1, o2)
 		{
 			var p1 = lookup.get(o1);
-			
+
 			if (p1 == null)
 			{
 				p1 = mxCellPath.create(o1).split(mxCellPath.PATH_SEPARATOR);
 				lookup.put(o1, p1);
 			}
-			
+
 			var p2 = lookup.get(o2);
-			
+
 			if (p2 == null)
 			{
 				p2 = mxCellPath.create(o2).split(mxCellPath.PATH_SEPARATOR);
 				lookup.put(o2, p2);
 			}
-			
+
 			var comp = mxCellPath.compare(p1, p2);
-			
+
 			return (comp == 0) ? 0 : (((comp > 0) == ascending) ? 1 : -1);
 		});
-		
+
 		return cells;
 	},
 
 	/**
 	 * Function: getStylename
-	 * 
+	 *
 	 * Returns the stylename in a style of the form [(stylename|key=value);] or
 	 * an empty string if the given style does not contain a stylename.
-	 * 
+	 *
 	 * Parameters:
-	 * 
+	 *
 	 * style - String of the form [(stylename|key=value);].
 	 */
 	getStylename: function(style)
@@ -3280,34 +3285,34 @@ var mxUtils =
 		{
 			var pairs = style.split(';');
 			var stylename = pairs[0];
-			
+
 			if (stylename.indexOf('=') < 0)
 			{
 				return stylename;
 			}
 		}
-				
+
 		return '';
 	},
 
 	/**
 	 * Function: getStylenames
-	 * 
+	 *
 	 * Returns the stylenames in a style of the form [(stylename|key=value);]
 	 * or an empty array if the given style does not contain any stylenames.
-	 * 
+	 *
 	 * Parameters:
-	 * 
+	 *
 	 * style - String of the form [(stylename|key=value);].
 	 */
 	getStylenames: function(style)
 	{
 		var result = [];
-		
+
 		if (style != null)
 		{
 			var pairs = style.split(';');
-			
+
 			for (var i = 0; i < pairs.length; i++)
 			{
 				if (pairs[i].indexOf('=') < 0)
@@ -3316,13 +3321,13 @@ var mxUtils =
 				}
 			}
 		}
-				
+
 		return result;
 	},
 
 	/**
 	 * Function: indexOfStylename
-	 * 
+	 *
 	 * Returns the index of the given stylename in the given style. This
 	 * returns -1 if the given stylename does not occur (as a stylename) in the
 	 * given style, otherwise it returns the index of the first character.
@@ -3333,24 +3338,24 @@ var mxUtils =
 		{
 			var tokens = style.split(';');
 			var pos = 0;
-			
+
 			for (var i = 0; i < tokens.length; i++)
 			{
 				if (tokens[i] == stylename)
 				{
 					return pos;
 				}
-				
+
 				pos += tokens[i].length + 1;
 			}
 		}
 
 		return -1;
 	},
-	
+
 	/**
 	 * Function: addStylename
-	 * 
+	 *
 	 * Adds the specified stylename to the given style if it does not already
 	 * contain the stylename.
 	 */
@@ -3366,27 +3371,27 @@ var mxUtils =
 			{
 				style += ';';
 			}
-			
+
 			style += stylename;
 		}
-		
+
 		return style;
 	},
-	
+
 	/**
 	 * Function: removeStylename
-	 * 
+	 *
 	 * Removes all occurrences of the specified stylename in the given style
 	 * and returns the updated style. Trailing semicolons are not preserved.
 	 */
 	removeStylename: function(style, stylename)
 	{
 		var result = [];
-		
+
 		if (style != null)
 		{
 			var tokens = style.split(';');
-			
+
 			for (var i = 0; i < tokens.length; i++)
 			{
 				if (tokens[i] != stylename)
@@ -3395,24 +3400,24 @@ var mxUtils =
 				}
 			}
 		}
-		
+
 		return result.join(';');
 	},
-	
+
 	/**
 	 * Function: removeAllStylenames
-	 * 
+	 *
 	 * Removes all stylenames from the given style and returns the updated
 	 * style.
 	 */
 	removeAllStylenames: function(style)
 	{
 		var result = [];
-		
+
 		if (style != null)
 		{
 			var tokens = style.split(';');
-			
+
 			for (var i = 0; i < tokens.length; i++)
 			{
 				// Keeps the key, value assignments
@@ -3422,18 +3427,18 @@ var mxUtils =
 				}
 			}
 		}
-		
+
 		return result.join(';');
 	},
 
 	/**
 	 * Function: setCellStyles
-	 * 
+	 *
 	 * Assigns the value for the given key in the styles of the given cells, or
 	 * removes the key from the styles if the value is null.
-	 * 
+	 *
 	 * Parameters:
-	 * 
+	 *
 	 * model - <mxGraphModel> to execute the transaction in.
 	 * cells - Array of <mxCells> to be updated.
 	 * key - Key of the style to be changed.
@@ -3461,16 +3466,16 @@ var mxUtils =
 			}
 		}
 	},
-	
+
 	/**
 	 * Function: setStyle
-	 * 
+	 *
 	 * Adds or removes the given key, value pair to the style and returns the
 	 * new style. If value is null or zero length then the key is removed from
 	 * the style. This is for cell styles, not for CSS styles.
-	 * 
+	 *
 	 * Parameters:
-	 * 
+	 *
 	 * style - String of the form [(stylename|key=value);].
 	 * key - Key of the style to be changed.
 	 * value - New value for the given key.
@@ -3478,7 +3483,7 @@ var mxUtils =
 	setStyle: function(style, key, value)
 	{
 		var isValue = value != null && (typeof(value.length) == 'undefined' || value.length > 0);
-		
+
 		if (style == null || style.length == 0)
 		{
 			if (isValue)
@@ -3491,7 +3496,7 @@ var mxUtils =
 			if (style.substring(0, key.length + 1) == key + '=')
 			{
 				var next = style.indexOf(';');
-				
+
 				if (isValue)
 				{
 					style = key + '=' + value + ((next < 0) ? ';' : style.substring(next));
@@ -3504,7 +3509,7 @@ var mxUtils =
 			else
 			{
 				var index = style.indexOf(';' + key + '=');
-				
+
 				if (index < 0)
 				{
 					if (isValue)
@@ -3516,7 +3521,7 @@ var mxUtils =
 				else
 				{
 					var next = style.indexOf(';', index + 1);
-					
+
 					if (isValue)
 					{
 						style = style.substring(0, index + 1) + key + '=' + value + ((next < 0) ? ';' : style.substring(next));
@@ -3528,18 +3533,18 @@ var mxUtils =
 				}
 			}
 		}
-		
+
 		return style;
 	},
 
 	/**
 	 * Function: setCellStyleFlags
-	 * 
+	 *
 	 * Sets or toggles the flag bit for the given key in the cell's styles.
 	 * If value is null then the flag is toggled.
-	 * 
+	 *
 	 * Example:
-	 * 
+	 *
 	 * (code)
 	 * var cells = graph.getSelectionCells();
 	 * mxUtils.setCellStyleFlags(graph.model,
@@ -3547,11 +3552,11 @@ var mxUtils =
 	 * 			mxConstants.STYLE_FONTSTYLE,
 	 * 			mxConstants.FONT_BOLD);
 	 * (end)
-	 * 
+	 *
 	 * Toggles the bold font style.
-	 * 
+	 *
 	 * Parameters:
-	 * 
+	 *
 	 * model - <mxGraphModel> that contains the cells.
 	 * cells - Array of <mxCells> to change the style for.
 	 * key - Key of the style to be changed.
@@ -3582,15 +3587,15 @@ var mxUtils =
 			}
 		}
 	},
-	
+
 	/**
 	 * Function: setStyleFlag
-	 * 
+	 *
 	 * Sets or removes the given key from the specified style and returns the
 	 * new style. If value is null then the flag is toggled.
-	 * 
+	 *
 	 * Parameters:
-	 * 
+	 *
 	 * style - String of the form [(stylename|key=value);].
 	 * key - Key of the style to be changed.
 	 * flag - Integer for the bit to be changed.
@@ -3612,7 +3617,7 @@ var mxUtils =
 		else
 		{
 			var index = style.indexOf(key+'=');
-			
+
 			if (index < 0)
 			{
 				var sep = (style.charAt(style.length-1) == ';') ? '' : ';';
@@ -3630,7 +3635,7 @@ var mxUtils =
 			{
 				var cont = style.indexOf(';', index);
 				var tmp = '';
-				
+
 				if (cont < 0)
 				{
 					tmp  = style.substring(index+key.length+1);
@@ -3639,7 +3644,7 @@ var mxUtils =
 				{
 					tmp = style.substring(index+key.length+1, cont);
 				}
-				
+
 				if (value == null)
 				{
 					tmp = parseInt(tmp) ^ flag;
@@ -3652,18 +3657,18 @@ var mxUtils =
 				{
 					tmp = parseInt(tmp) & ~flag;
 				}
-				
+
 				style = style.substring(0, index) + key + '=' + tmp +
 					((cont >= 0) ? style.substring(cont) : '');
 			}
 		}
-		
+
 		return style;
 	},
-	
+
 	/**
 	 * Function: getAlignmentAsPoint
-	 * 
+	 *
 	 * Returns an <mxPoint> that represents the horizontal and vertical alignment
 	 * for numeric computations. X is -0.5 for center, -1 for right and 0 for
 	 * left alignment. Y is -0.5 for middle, -1 for bottom and 0 for top
@@ -3673,7 +3678,7 @@ var mxUtils =
 	{
 		var dx = -0.5;
 		var dy = -0.5;
-		
+
 		// Horizontal alignment
 		if (align == mxConstants.ALIGN_LEFT)
 		{
@@ -3693,27 +3698,27 @@ var mxUtils =
 		{
 			dy = -1;
 		}
-		
+
 		return new mxPoint(dx, dy);
 	},
-	
+
 	/**
 	 * Function: getSizeForString
-	 * 
+	 *
 	 * Returns an <mxRectangle> with the size (width and height in pixels) of
 	 * the given string. The string may contain HTML markup. Newlines should be
 	 * converted to <br> before calling this method. The caller is responsible
 	 * for sanitizing the HTML markup.
-	 * 
+	 *
 	 * Example:
-	 * 
+	 *
 	 * (code)
 	 * var label = graph.getLabel(cell).replace(/\n/g, "<br>");
 	 * var size = graph.getSizeForString(label);
 	 * (end)
-	 * 
+	 *
 	 * Parameters:
-	 * 
+	 *
 	 * text - String whose size should be returned.
 	 * fontSize - Integer that specifies the font size in pixels. Default is
 	 * <mxConstants.DEFAULT_FONTSIZE>.
@@ -3727,12 +3732,12 @@ var mxUtils =
 		fontSize = (fontSize != null) ? fontSize : mxConstants.DEFAULT_FONTSIZE;
 		fontFamily = (fontFamily != null) ? fontFamily : mxConstants.DEFAULT_FONTFAMILY;
 		var div = document.createElement('div');
-		
+
 		// Sets the font size and family
 		div.style.fontFamily = fontFamily;
 		div.style.fontSize = Math.round(fontSize) + 'px';
 		div.style.lineHeight = Math.round(fontSize * mxConstants.LINE_HEIGHT) + 'px';
-		
+
 		// Sets the font style
 		if (fontStyle != null)
 		{
@@ -3740,36 +3745,36 @@ var mxUtils =
 			{
 				div.style.fontWeight = 'bold';
 			}
-			
+
 			if ((fontStyle & mxConstants.FONT_ITALIC) == mxConstants.FONT_ITALIC)
 			{
 				div.style.fontStyle = 'italic';
 			}
-			
+
 			var txtDecor = [];
-			
+
 			if ((fontStyle & mxConstants.FONT_UNDERLINE) == mxConstants.FONT_UNDERLINE)
 			{
 				txtDecor.push('underline');
 			}
-			
+
 			if ((fontStyle & mxConstants.FONT_STRIKETHROUGH) == mxConstants.FONT_STRIKETHROUGH)
 			{
 				txtDecor.push('line-through');
 			}
-			
+
 			if (txtDecor.length > 0)
 			{
 				div.style.textDecoration = txtDecor.join(' ');
 			}
 		}
-		
+
 		// Disables block layout and outside wrapping and hides the div
 		div.style.position = 'absolute';
 		div.style.visibility = 'hidden';
 		div.style.display = (mxClient.IS_QUIRKS) ? 'inline' : 'inline-block';
 		div.style.zoom = '1';
-		
+
 		if (textWidth != null)
 		{
 			div.style.width = textWidth + 'px';
@@ -3779,18 +3784,18 @@ var mxUtils =
 		{
 			div.style.whiteSpace = 'nowrap';
 		}
-		
+
 		// Adds the text and inserts into DOM for updating of size
 		div.innerHTML = text;
 		document.body.appendChild(div);
-		
+
 		// Gets the size and removes from DOM
 		var size = new mxRectangle(0, 0, div.offsetWidth, div.offsetHeight);
 		document.body.removeChild(div);
-		
+
 		return size;
 	},
-	
+
 	/**
 	 * Function: getViewXml
 	 */
@@ -3805,7 +3810,7 @@ var mxUtils =
 			var model = graph.getModel();
 			cells = [model.getRoot()];
 		}
-		
+
 		var view = graph.getView();
 		var result = null;
 
@@ -3832,7 +3837,7 @@ var mxUtils =
 		{
 			view.drawPane = view.drawPane.cloneNode(false);
 			view.canvas.appendChild(view.drawPane);
-			
+
 			// Redirects cell overlays into temporary container
 			view.overlayPane = view.overlayPane.cloneNode(false);
 			view.canvas.appendChild(view.overlayPane);
@@ -3863,17 +3868,17 @@ var mxUtils =
 
 		return result;
 	},
-	
+
 	/**
 	 * Function: getScaleForPageCount
-	 * 
+	 *
 	 * Returns the scale to be used for printing the graph with the given
 	 * bounds across the specifies number of pages with the given format. The
 	 * scale is always computed such that it given the given amount or fewer
 	 * pages in the print output. See <mxPrintPreview> for an example.
-	 * 
+	 *
 	 * Parameters:
-	 * 
+	 *
 	 * pageCount - Specifies the number of pages in the print output.
 	 * graph - <mxGraph> that should be printed.
 	 * pageFormat - Optional <mxRectangle> that specifies the page format.
@@ -3888,10 +3893,10 @@ var mxUtils =
 			// change
 			return 1;
 		}
-		
+
 		pageFormat = (pageFormat != null) ? pageFormat : mxConstants.PAGE_FORMAT_A4_PORTRAIT;
 		border = (border != null) ? border : 0;
-		
+
 		var availablePageWidth = pageFormat.width - (border * 2);
 		var availablePageHeight = pageFormat.height - (border * 2);
 
@@ -3905,18 +3910,18 @@ var mxUtils =
 		var graphHeight = graphBounds.height;
 
 		var scale = 1;
-		
+
 		// The ratio of the width/height for each printer page
 		var pageFormatAspectRatio = availablePageWidth / availablePageHeight;
 		// The ratio of the width/height for the graph to be printer
 		var graphAspectRatio = graphWidth / graphHeight;
-		
-		// The ratio of horizontal pages / vertical pages for this 
+
+		// The ratio of horizontal pages / vertical pages for this
 		// graph to maintain its aspect ratio on this page format
 		var pagesAspectRatio = graphAspectRatio / pageFormatAspectRatio;
-		
-		// Factor the square root of the page count up and down 
-		// by the pages aspect ratio to obtain a horizontal and 
+
+		// Factor the square root of the page count up and down
+		// by the pages aspect ratio to obtain a horizontal and
 		// vertical page count that adds up to the page count
 		// and has the correct aspect ratio
 		var pageRoot = Math.sqrt(pageCount);
@@ -3925,9 +3930,9 @@ var mxUtils =
 		var numColumnPages = pageRoot / pagesAspectRatioSqrt;
 
 		// These value are rarely more than 2 rounding downs away from
-		// a total that meets the page count. In cases of one being less 
-		// than 1 page, the other value can be too high and take more iterations 
-		// In this case, just change that value to be the page count, since 
+		// a total that meets the page count. In cases of one being less
+		// than 1 page, the other value can be too high and take more iterations
+		// In this case, just change that value to be the page count, since
 		// we know the other value is 1
 		if (numRowPages < 1 && numColumnPages > pageCount)
 		{
@@ -3935,18 +3940,18 @@ var mxUtils =
 			numColumnPages = pageCount;
 			numRowPages /= scaleChange;
 		}
-		
+
 		if (numColumnPages < 1 && numRowPages > pageCount)
 		{
 			var scaleChange = numRowPages / pageCount;
 			numRowPages = pageCount;
 			numColumnPages /= scaleChange;
-		}		
+		}
 
 		var currentTotalPages = Math.ceil(numRowPages) * Math.ceil(numColumnPages);
 
 		var numLoops = 0;
-		
+
 		// Iterate through while the rounded up number of pages comes to
 		// a total greater than the required number
 		while (currentTotalPages > pageCount)
@@ -3958,7 +3963,7 @@ var mxUtils =
 
 			var roundRowDownProportion = Math.floor(numRowPages) / numRowPages;
 			var roundColumnDownProportion = Math.floor(numColumnPages) / numColumnPages;
-			
+
 			// If the round down proportion is, work out the proportion to
 			// round down to 1 page less
 			if (roundRowDownProportion == 1)
@@ -3969,11 +3974,11 @@ var mxUtils =
 			{
 				roundColumnDownProportion = Math.floor(numColumnPages-1) / numColumnPages;
 			}
-			
+
 			// Check which rounding down is smaller, but in the case of very small roundings
 			// try the other dimension instead
 			var scaleChange = 1;
-			
+
 			// Use the higher of the two values
 			if (roundRowDownProportion > roundColumnDownProportion)
 			{
@@ -3987,9 +3992,9 @@ var mxUtils =
 			numRowPages = numRowPages * scaleChange;
 			numColumnPages = numColumnPages * scaleChange;
 			currentTotalPages = Math.ceil(numRowPages) * Math.ceil(numColumnPages);
-			
+
 			numLoops++;
-			
+
 			if (numLoops > 10)
 			{
 				break;
@@ -4000,23 +4005,23 @@ var mxUtils =
 		// The column pages will give the same value
 		var posterWidth = availablePageWidth * numRowPages;
 		scale = posterWidth / graphWidth;
-		
+
 		// Allow for rounding errors
 		return scale * 0.99999;
 	},
-	
+
 	/**
 	 * Function: show
-	 * 
+	 *
 	 * Copies the styles and the markup from the graph's container into the
 	 * given document and removes all cursor styles. The document is returned.
-	 * 
+	 *
 	 * This function should be called from within the document with the graph.
 	 * If you experience problems with missing stylesheets in IE then try adding
 	 * the domain to the trusted sites.
-	 * 
+	 *
 	 * Parameters:
-	 * 
+	 *
 	 * graph - <mxGraph> to be copied.
 	 * doc - Document where the new graph is created.
 	 * x0 - X-coordinate of the graph view origin. Default is 0.
@@ -4028,7 +4033,7 @@ var mxUtils =
 	{
 		x0 = (x0 != null) ? x0 : 0;
 		y0 = (y0 != null) ? y0 : 0;
-		
+
 		if (doc == null)
 		{
 			var wnd = window.open();
@@ -4044,21 +4049,21 @@ var mxUtils =
 		{
 			doc.writeln('<!--[if IE]><meta http-equiv="X-UA-Compatible" content="IE=9"><![endif]-->');
 		}
-		
+
 		var bounds = graph.getGraphBounds();
 		var dx = Math.ceil(x0 - bounds.x);
 		var dy = Math.ceil(y0 - bounds.y);
-		
+
 		if (w == null)
 		{
 			w = Math.ceil(bounds.width + x0) + Math.ceil(Math.ceil(bounds.x) - bounds.x);
 		}
-		
+
 		if (h == null)
 		{
 			h = Math.ceil(bounds.height + y0) + Math.ceil(Math.ceil(bounds.y) - bounds.y);
 		}
-		
+
 		// Needs a special way of creating the page so that no click is required
 		// to refresh the contents after the external CSS styles have been loaded.
 		// To avoid a click or programmatic refresh, the styleSheets[].cssText
@@ -4068,7 +4073,7 @@ var mxUtils =
 			var html = '<html><head>';
 
 			var base = document.getElementsByTagName('base');
-			
+
 			for (var i = 0; i < base.length; i++)
 			{
 				html += base[i].outerHTML;
@@ -4090,7 +4095,7 @@ var mxUtils =
 			}
 
 			html += '</style></head><body style="margin:0px;">';
-			
+
 			// Copies the contents of the graph container
 			html += '<div style="position:absolute;overflow:hidden;width:' + w + 'px;height:' + h + 'px;"><div style="position:relative;left:' + dx + 'px;top:' + dy + 'px;">';
 			html += graph.container.innerHTML;
@@ -4102,23 +4107,23 @@ var mxUtils =
 		else
 		{
 			doc.writeln('<html><head>');
-			
+
 			var base = document.getElementsByTagName('base');
-			
+
 			for (var i = 0; i < base.length; i++)
 			{
 				doc.writeln(mxUtils.getOuterHtml(base[i]));
 			}
-			
+
 			var links = document.getElementsByTagName('link');
-			
+
 			for (var i = 0; i < links.length; i++)
 			{
 				doc.writeln(mxUtils.getOuterHtml(links[i]));
 			}
-	
+
 			var styles = document.getElementsByTagName('style');
-			
+
 			for (var i = 0; i < styles.length; i++)
 			{
 				doc.writeln(mxUtils.getOuterHtml(styles[i]));
@@ -4141,11 +4146,11 @@ var mxUtils =
 
 			var node = graph.container.firstChild;
 			var svg = null;
-			
+
 			while (node != null)
 			{
 				var clone = node.cloneNode(true);
-				
+
 				if (node == graph.view.drawPane.ownerSVGElement)
 				{
 					outer.appendChild(clone);
@@ -4155,17 +4160,17 @@ var mxUtils =
 				{
 					div.appendChild(clone);
 				}
-				
+
 				node = node.nextSibling;
 			}
 
 			doc.body.appendChild(outer);
-			
+
 			if (div.firstChild != null)
 			{
 				doc.body.appendChild(div);
 			}
-						
+
 			if (svg != null)
 			{
 				svg.style.minWidth = '';
@@ -4173,22 +4178,22 @@ var mxUtils =
 				svg.firstChild.setAttribute('transform', 'translate(' + dx + ',' + dy + ')');
 			}
 		}
-		
+
 		mxUtils.removeCursors(doc.body);
-	
+
 		return doc;
 	},
-	
+
 	/**
 	 * Function: printScreen
-	 * 
+	 *
 	 * Prints the specified graph using a new window and the built-in print
 	 * dialog.
-	 * 
+	 *
 	 * This function should be called from within the document with the graph.
-	 * 
+	 *
 	 * Parameters:
-	 * 
+	 *
 	 * graph - <mxGraph> to be printed.
 	 */
 	printScreen: function(graph)
@@ -4196,14 +4201,14 @@ var mxUtils =
 		var wnd = window.open();
 		var bounds = graph.getGraphBounds();
 		mxUtils.show(graph, wnd.document);
-		
+
 		var print = function()
 		{
 			wnd.focus();
 			wnd.print();
 			wnd.close();
 		};
-		
+
 		// Workaround for Google Chrome which needs a bit of a
 		// delay in order to render the SVG contents
 		if (mxClient.IS_GC)
@@ -4215,15 +4220,15 @@ var mxUtils =
 			print();
 		}
 	},
-	
+
 	/**
 	 * Function: popup
-	 * 
+	 *
 	 * Shows the specified text content in a new <mxWindow> or a new browser
 	 * window if isInternalWindow is false.
-	 * 
+	 *
 	 * Parameters:
-	 * 
+	 *
 	 * content - String that specifies the text to be displayed.
 	 * isInternalWindow - Optional boolean indicating if an mxWindow should be
 	 * used instead of a new browser window. Default is false.
@@ -4233,17 +4238,17 @@ var mxUtils =
 	   	if (isInternalWindow)
 	   	{
 			var div = document.createElement('div');
-			
+
 			div.style.overflow = 'scroll';
 			div.style.width = '636px';
 			div.style.height = '460px';
-			
+
 			var pre = document.createElement('pre');
 		    pre.innerHTML = mxUtils.htmlEntities(content, false).
 		    	replace(/\n/g,'<br>').replace(/ /g, '&nbsp;');
-			
+
 			div.appendChild(pre);
-			
+
 			var w = document.body.clientWidth;
 			var h = Math.max(document.body.clientHeight || 0, document.documentElement.clientHeight)
 			var wnd = new mxWindow('Popup Window', div,
@@ -4271,31 +4276,31 @@ var mxUtils =
 			}
 	   	}
 	},
-	
+
 	/**
 	 * Function: alert
-	 * 
+	 *
 	 * Displayss the given alert in a new dialog. This implementation uses the
 	 * built-in alert function. This is used to display validation errors when
 	 * connections cannot be changed or created.
-	 * 
+	 *
 	 * Parameters:
-	 * 
+	 *
 	 * message - String specifying the message to be displayed.
 	 */
 	alert: function(message)
 	{
 		alert(message);
 	},
-	
+
 	/**
 	 * Function: prompt
-	 * 
+	 *
 	 * Displays the given message in a prompt dialog. This implementation uses
 	 * the built-in prompt function.
-	 * 
+	 *
 	 * Parameters:
-	 * 
+	 *
 	 * message - String specifying the message to be displayed.
 	 * defaultValue - Optional string specifying the default value.
 	 */
@@ -4303,15 +4308,15 @@ var mxUtils =
 	{
 		return prompt(message, (defaultValue != null) ? defaultValue : '');
 	},
-	
+
 	/**
 	 * Function: confirm
-	 * 
+	 *
 	 * Displays the given message in a confirm dialog. This implementation uses
 	 * the built-in confirm function.
-	 * 
+	 *
 	 * Parameters:
-	 * 
+	 *
 	 * message - String specifying the message to be displayed.
 	 */
 	confirm: function(message)
@@ -4321,14 +4326,14 @@ var mxUtils =
 
 	/**
 	 * Function: error
-	 * 
+	 *
 	 * Displays the given error message in a new <mxWindow> of the given width.
 	 * If close is true then an additional close button is added to the window.
 	 * The optional icon specifies the icon to be used for the window. Default
 	 * is <mxUtils.errorImage>.
-	 * 
+	 *
 	 * Parameters:
-	 * 
+	 *
 	 * message - String specifying the message to be displayed.
 	 * width - Integer specifying the width of the window.
 	 * close - Optional boolean indicating whether to add a close button.
@@ -4359,7 +4364,7 @@ var mxUtils =
 		if (close)
 		{
 			mxUtils.br(div);
-			
+
 			var tmp = document.createElement('p');
 			var button = document.createElement('button');
 
@@ -4379,30 +4384,30 @@ var mxUtils =
 
 			mxUtils.write(button, mxResources.get(mxUtils.closeResource) ||
 				mxUtils.closeResource);
-			
+
 			tmp.appendChild(button);
 			div.appendChild(tmp);
-			
+
 			mxUtils.br(div);
-			
+
 			warn.setClosable(true);
 		}
-		
+
 		warn.setVisible(true);
-		
+
 		return warn;
 	},
 
 	/**
 	 * Function: makeDraggable
-	 * 
+	 *
 	 * Configures the given DOM element to act as a drag source for the
 	 * specified graph. Returns a a new <mxDragSource>. If
 	 * <mxDragSource.guideEnabled> is enabled then the x and y arguments must
 	 * be used in funct to match the preview location.
-	 * 
+	 *
 	 * Example:
-	 * 
+	 *
 	 * (code)
 	 * var funct = function(graph, evt, cell, x, y)
 	 * {
@@ -4410,7 +4415,7 @@ var mxUtils =
 	 *   {
 	 *     var parent = graph.getDefaultParent();
 	 *     var vertex = null;
-	 *     
+	 *
 	 *     graph.getModel().beginUpdate();
 	 *     try
 	 *     {
@@ -4424,7 +4429,7 @@ var mxUtils =
 	 *     graph.setSelectionCell(vertex);
 	 *   }
 	 * }
-	 * 
+	 *
 	 * var img = document.createElement('img');
 	 * img.setAttribute('src', 'editors/images/rectangle.gif');
 	 * img.style.position = 'absolute';
@@ -4432,16 +4437,16 @@ var mxUtils =
 	 * img.style.top = '0px';
 	 * img.style.width = '16px';
 	 * img.style.height = '16px';
-	 * 
+	 *
 	 * var dragImage = img.cloneNode(true);
 	 * dragImage.style.width = '32px';
 	 * dragImage.style.height = '32px';
 	 * mxUtils.makeDraggable(img, graph, funct, dragImage);
 	 * document.body.appendChild(img);
 	 * (end)
-	 * 
+	 *
 	 * Parameters:
-	 * 
+	 *
 	 * element - DOM element to make draggable.
 	 * graphF - <mxGraph> that acts as the drop target or a function that takes a
 	 * mouse event and returns the current <mxGraph>.
@@ -4468,28 +4473,28 @@ var mxUtils =
 		dragSource.dragOffset = new mxPoint((dx != null) ? dx : 0,
 			(dy != null) ? dy : mxConstants.TOOLTIP_VERTICAL_OFFSET);
 		dragSource.autoscroll = autoscroll;
-		
+
 		// Cannot enable this by default. This needs to be enabled in the caller
 		// if the funct argument uses the new x- and y-arguments.
 		dragSource.setGuidesEnabled(false);
-		
+
 		if (highlightDropTargets != null)
 		{
 			dragSource.highlightDropTargets = highlightDropTargets;
 		}
-		
+
 		// Overrides function to find drop target cell
 		if (getDropTarget != null)
 		{
 			dragSource.getDropTarget = getDropTarget;
 		}
-		
+
 		// Overrides function to get current graph
 		dragSource.getGraphForEvent = function(evt)
 		{
 			return (typeof(graphF) == 'function') ? graphF(evt) : graphF;
 		};
-		
+
 		// Translates switches into dragSource customizations
 		if (dragElement != null)
 		{
@@ -4497,7 +4502,7 @@ var mxUtils =
 			{
 				return dragElement.cloneNode(true);
 			};
-			
+
 			if (scalePreview)
 			{
 				dragSource.createPreviewElement = function(graph)
@@ -4508,12 +4513,12 @@ var mxUtils =
 					var h = parseInt(elt.style.height);
 					elt.style.width = Math.round(w * graph.view.scale) + 'px';
 					elt.style.height = Math.round(h * graph.view.scale) + 'px';
-					
+
 					return elt;
 				};
 			}
 		}
-		
+
 		return dragSource;
 	}
 

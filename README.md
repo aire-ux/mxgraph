@@ -1,23 +1,113 @@
-*NOTE 09.11.2020* : Development on mxGraph has now stopped, this repo is effectively end of life.
+# Aire-UX/MXGraph
 
-Known forks:
+[jgraph](https://github.com/jgraph/mxgraph) is no longer being maintained.  The Aire-UX project
+relies on mxgraph, and this is its official fork. This project's goals are to:
 
-https://github.com/jsGraph/mxgraph
+1. Implement bug fixes
+2. Support modern browser features as they appear
+3. Provide TypeScript integration support [@aire-ux/mxgraph-typescript](https://github.com/aire-ux/typed-mxgraph)
+4. Implement some new features as required
 
-https://github.com/process-analytics/mxgraph
+Additionally, this project will consider enterprise support contracts and bug-bounties.
 
-mxGraph
-=======
+## Installation
 
-mxGraph is a fully client side JavaScript diagramming library that uses SVG and HTML for rendering.
+**NPM**
+```
+npm install @aire-ux/mxgraph
+```
 
-The PHP model was deprecated after release 4.0.3 and the archive can be found [here](https://github.com/jgraph/mxgraph-php).
+**Bower**
+```
+bower install @aire-ux/mxgraph
+```
 
-The unmaintained npm build is [here](https://www.npmjs.com/package/mxgraph)
 
-We don't support Typescript, but there is a [project to implement this](https://github.com/process-analytics/mxgraph-road-to-DefinitelyTyped), with [this repo](https://github.com/hungtcs/mxgraph-type-definitions) currently used as the lead repo.
+Once you have installed the project via your package-manager, you can consume it as follows:
 
-The mxGraph library uses no third-party software, it requires no plugins and can be integrated in virtually any framework (it's vanilla JS).
+```typescript
+
+import '@aire-ux/mxgraph';
+
+export type mxConfiguration = {
+  mxLoadResources: boolean;
+  mxForceIncludes: boolean;
+  mxLoadStylesheets: boolean;
+  mxResourceExtension: string;
+  mxProductionMode: boolean;
+  mxBasePath: string;
+};
+
+const factory = (cfg: Partial<mxConfiguration>) =>
+  mxgraph({
+    mxLoadResources: cfg.mxLoadResources || false,
+    mxForceIncludes: cfg.mxForceIncludes || false,
+    mxLoadStylesheets: cfg.mxLoadStylesheets || true,
+    mxResourceExtension: cfg.mxResourceExtension || '.txt',
+    mxProductionMode: cfg.mxProductionMode || true,
+    mxBasePath: cfg.mxBasePath,
+  });
+
+export default factory;
+```
+
+```typescript
+
+import factory from './mxgraph';
+
+const mx = factory({
+  mxBasePath: value,
+});
+
+const container = document.getElementById(`#my-container`);
+const graph = new mx.mxGraph(container);
+```
+
+
+## TypeScript Definitions
+
+Aire-UX maintains a fork of [typed-mxgraph](https://github.com/typed-mxgraph/typed-mxgraph) which may
+be installed via `npm install @aire-ux/typed-mxgraph`.
+
+It may be used as follows:
+
+**tsconfig.json**
+```json
+
+{
+  "compilerOptions": {
+    "target": "es2018",
+    "module": "esnext",
+    "moduleResolution": "node",
+    "noEmitOnError": true,
+    "lib": ["es2017", "dom"],
+    "strict": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "experimentalDecorators": true,
+    "strictPropertyInitialization": false,
+    "importHelpers": true,
+    "outDir": "dist",
+    "sourceMap": true,
+    "inlineSources": true,
+    "rootDir": "./",
+    "declaration": true,
+    "incremental": true,
+    "typeRoots": [
+      "node_modules/@types"
+    ]
+  },
+  "include": [
+    "src/**/*.ts",
+    "node_modules/@aire-ux/typed-mxgraph/**/*.d.ts" //include the typings
+  ],
+  "exclude": ["node_modules"]
+
+}
+```
+
+
+
 
 Getting Started
 ===============
@@ -29,11 +119,3 @@ Support
 
 There is a [mxgraph tag on Stack Overflow](http://stackoverflow.com/questions/tagged/mxgraph). Please ensure your questions adhere to the [SO guidelines](http://stackoverflow.com/help/on-topic), otherwise it is likely to be closed.
 
-If you are looking for active support, your better route is one of the commercial diagramming tools, like [yFiles](https://www.yworks.com/products/yfiles-for-html) or [GoJS](https://gojs.net/latest/index.html).
-
-History
-=======
-
-We created mxGraph in 2005 as a commercial project and it ran through to 2016 that way. Our USP was the support for non-SVG browsers, when that advantage expired we moved onto commercial activity around draw.io. mxGraph is pretty much feature complete, production tested in many large enterprises and stable for many years.
-
-Over time you can expect this codebase will break features against new browser releases, it's not advised to start new projects against this codebase for that reason.

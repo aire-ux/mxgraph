@@ -20,9 +20,9 @@ var mxClient =
 	 * 
 	 * versionMajor.versionMinor.buildNumber.revisionNumber
 	 * 
-	 * Current version is 4.2.2.
+	 * Current version is 4.2.5.
 	 */
-	VERSION: '4.2.2',
+	VERSION: '4.2.3',
 
 	/**
 	 * Variable: IS_IE
@@ -358,7 +358,9 @@ var mxClient =
 	 */
 	include: function(src)
 	{
-		document.write('<script src="'+src+'"></script>');
+		if(!window['mxProductionMode']) {
+			document.write('<script src="' + src + '"></script>');
+		}
 	}
 };
 

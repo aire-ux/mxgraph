@@ -197,7 +197,7 @@ var mxClient =
 	 * Opera, older SVG-based browsers and all versions of IE.
 	 */
   	NO_FO: !document.createElementNS || document.createElementNS('http://www.w3.org/2000/svg',
-  		'foreignObject') != '[object SVGForeignObjectElement]' || navigator.userAgent.indexOf('Opera/') >= 0,
+  		'foreignObject').toString() !== '[object SVGForeignObjectElement]',
 
 	/**
 	 * Variable: IS_WIN

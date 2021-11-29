@@ -3,5 +3,6 @@
   "include": [
     "**/*.d.ts",
     "tests/**/*.spec.ts"
-  ]
+  ],
+  "exclude": ["javascript/dist/**/*.d.ts"]
 }

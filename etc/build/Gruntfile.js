@@ -26,6 +26,20 @@ module.exports = function (grunt) {
       }
     },
     copy: {
+      typings: {
+        files: [{
+          expand: true,
+          cwd: process.cwd() + "/typings",
+          src: '**/*.ts',
+          dest: './javascript/dist',
+          rename: function(dest, matched) {
+            if(matched === "index.d.ts") {
+              return dest + "/" + "build.d.ts"
+            }
+            return dest + "/" + matched;
+          }
+        }],
+      },
       main: {
         files: [{
           expand: true,

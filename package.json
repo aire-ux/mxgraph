@@ -1,7 +1,7 @@
 {
   "name": "@aire-ux/mxgraph",
   "description": "mxGraph is a fully client side JavaScript diagramming library that uses SVG and HTML for rendering.",
-  "version": "4.2.5",
+  "version": "4.2.6",
   "homepage": "https://github.com/aire-ux/mxgraph",
   "author": {
     "name": "Sunshower.io",
@@ -25,7 +25,10 @@
     "grunt-contrib-copy": "^1.0.0",
     "grunt-contrib-uglify": "^5.0.1",
     "grunt-webpack": "^2.0.1",
+    "jest": "^27.3.1",
     "load-grunt-tasks": "^3.5.2",
+    "ts-jest": "^27.0.7",
+    "ts-node": "^10.4.0",
     "webpack": "^2.2.1"
   }
 }
